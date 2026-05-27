@@ -1,0 +1,753 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Tragwerk · Internes Feedback zum Relaunch</title>
+<style>
+  /* ───── Reset & Base ──────────────────────────────────────────── */
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  html { scroll-behavior: smooth; }
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, "Inter", "Segoe UI", Roboto, sans-serif;
+    background: #0E1217;
+    color: #E4E7EC;
+    line-height: 1.55;
+    font-size: 18px;
+    -webkit-font-smoothing: antialiased;
+    text-rendering: optimizeLegibility;
+  }
+  ::selection { background: #5BE9C4; color: #0E1217; }
+
+  /* ───── Layout ────────────────────────────────────────────────── */
+  .wrap { max-width: 760px; margin: 0 auto; padding: 56px 28px 120px; }
+  @media (max-width: 640px) { .wrap { padding: 36px 20px 96px; } }
+
+  /* ───── Brand Header ──────────────────────────────────────────── */
+  .brand {
+    display: flex; align-items: center; justify-content: space-between; gap: 14px;
+    padding-bottom: 24px;
+    border-bottom: 1px solid #1E242C;
+    margin-bottom: 56px;
+  }
+  .brand-left { display: flex; align-items: center; gap: 14px; }
+  .brand-logo svg { display: block; width: 200px; height: auto; }
+  .brand-mark {
+    width: 28px; height: 28px;
+    background: linear-gradient(135deg, #5BE9C4 0%, #3FB8A0 100%);
+    border-radius: 4px;
+    position: relative;
+  }
+  .brand-mark::after {
+    content: ""; position: absolute;
+    top: 6px; left: 50%; transform: translateX(-50%);
+    width: 4px; height: 22px;
+    background: #0E1217; border-radius: 1px;
+  }
+  .brand-mark::before {
+    content: ""; position: absolute;
+    top: 6px; left: 4px; right: 4px;
+    height: 4px;
+    background: #0E1217; border-radius: 1px;
+  }
+  .brand-text { font-size: 16px; letter-spacing: 0.04em; color: #98A2B3; font-weight: 500; }
+  .brand-text strong { color: #E4E7EC; font-weight: 600; }
+
+  /* ───── Hero ──────────────────────────────────────────────────── */
+  .hero { margin-bottom: 64px; }
+  .hero-eyebrow {
+    font-size: 14px; letter-spacing: 0.18em; text-transform: uppercase;
+    color: #5BE9C4; font-weight: 600; margin-bottom: 20px;
+  }
+  .hero h1 {
+    font-size: clamp(28px, 5vw, 42px);
+    font-weight: 600;
+    line-height: 1.15;
+    letter-spacing: -0.02em;
+    color: #F8FAFC;
+    margin-bottom: 22px;
+  }
+  .hero p {
+    font-size: 19px; color: #BCC4D0; line-height: 1.65;
+    max-width: 640px;
+  }
+  .hero p + p { margin-top: 14px; }
+  .hero strong { color: #E4E7EC; font-weight: 600; }
+
+  /* ───── Briefing ──────────────────────────────────────────────── */
+  .briefing {
+    background: #141A22;
+    border: 1px solid #1E242C;
+    border-radius: 12px;
+    padding: 32px 32px 28px;
+    margin-bottom: 56px;
+  }
+  @media (max-width: 640px) { .briefing { padding: 24px 22px; } }
+  .briefing h2 {
+    font-size: 15px; letter-spacing: 0.14em; text-transform: uppercase;
+    color: #5BE9C4; font-weight: 600; margin-bottom: 18px;
+  }
+  .briefing h3 {
+    font-size: 17px; font-weight: 600; color: #E4E7EC;
+    margin: 22px 0 8px;
+  }
+  .briefing h3:first-of-type { margin-top: 0; }
+  .briefing p { color: #98A2B3; font-size: 16.5px; line-height: 1.65; }
+  .briefing p + p { margin-top: 8px; }
+  .briefing ul { list-style: none; margin-top: 8px; }
+  .briefing li {
+    color: #98A2B3; font-size: 16.5px; padding-left: 18px;
+    position: relative; margin-bottom: 6px; line-height: 1.55;
+  }
+  .briefing li::before {
+    content: ""; position: absolute; left: 0; top: 10px;
+    width: 6px; height: 1px; background: #5BE9C4;
+  }
+  .briefing-source {
+    margin-top: 24px; padding-top: 20px;
+    border-top: 1px solid #1E242C;
+    font-size: 14px; color: #6B7280;
+    letter-spacing: 0.02em;
+  }
+
+  /* ───── Sections ──────────────────────────────────────────────── */
+  .section { margin-bottom: 56px; }
+  .section-header { margin-bottom: 32px; }
+  .section-no {
+    font-size: 13px; letter-spacing: 0.2em;
+    color: #5BE9C4; font-weight: 700;
+    margin-bottom: 8px;
+  }
+  .section h2 {
+    font-size: 26px; font-weight: 600;
+    color: #F8FAFC; letter-spacing: -0.01em;
+    margin-bottom: 8px;
+  }
+  .section-intro {
+    font-size: 17px; color: #98A2B3;
+    line-height: 1.6; max-width: 600px;
+  }
+
+  /* ───── Questions ─────────────────────────────────────────────── */
+  .q { margin-bottom: 36px; }
+  .q-label {
+    display: block;
+    font-size: 18px; font-weight: 500;
+    color: #E4E7EC; margin-bottom: 6px;
+    line-height: 1.45;
+  }
+  .q-no {
+    color: #5BE9C4; font-weight: 600;
+    margin-right: 10px;
+    font-variant-numeric: tabular-nums;
+  }
+  .q-hint {
+    font-size: 15.5px; color: #6B7280;
+    margin-bottom: 16px; line-height: 1.5;
+  }
+
+  /* Inputs */
+  input[type="text"], textarea, select {
+    width: 100%;
+    background: #141A22;
+    border: 1px solid #1E242C;
+    border-radius: 8px;
+    color: #E4E7EC;
+    padding: 12px 14px;
+    font-size: 17px;
+    font-family: inherit;
+    line-height: 1.5;
+    transition: border-color 0.15s, background 0.15s;
+  }
+  input[type="text"]:focus, textarea:focus, select:focus {
+    outline: none;
+    border-color: #5BE9C4;
+    background: #181F28;
+  }
+  textarea { resize: vertical; min-height: 80px; }
+  ::placeholder { color: #4B5563; }
+
+  /* Slider */
+  .slider-wrap { display: flex; align-items: center; gap: 16px; }
+  .slider-wrap input[type="range"] {
+    flex: 1;
+    -webkit-appearance: none; appearance: none;
+    height: 4px;
+    background: #1E242C;
+    border-radius: 2px;
+    outline: none;
+  }
+  .slider-wrap input[type="range"]::-webkit-slider-thumb {
+    -webkit-appearance: none; appearance: none;
+    width: 20px; height: 20px;
+    background: #5BE9C4;
+    border: 3px solid #0E1217;
+    border-radius: 50%;
+    cursor: pointer;
+    box-shadow: 0 0 0 1px #5BE9C4;
+  }
+  .slider-wrap input[type="range"]::-moz-range-thumb {
+    width: 20px; height: 20px;
+    background: #5BE9C4;
+    border: 3px solid #0E1217;
+    border-radius: 50%;
+    cursor: pointer;
+  }
+  .slider-val {
+    min-width: 48px;
+    text-align: center;
+    font-size: 16px;
+    color: #5BE9C4;
+    font-weight: 600;
+    font-variant-numeric: tabular-nums;
+    background: #141A22;
+    padding: 6px 10px;
+    border-radius: 6px;
+    border: 1px solid #1E242C;
+  }
+  .slider-scale {
+    display: flex; justify-content: space-between;
+    font-size: 14px; color: #6B7280;
+    margin-top: 8px; padding: 0 2px;
+  }
+
+  /* Radio / Checkbox cards */
+  .option-group { display: flex; flex-direction: column; gap: 8px; }
+  .option {
+    display: flex; align-items: flex-start; gap: 12px;
+    background: #141A22;
+    border: 1px solid #1E242C;
+    border-radius: 8px;
+    padding: 12px 14px;
+    cursor: pointer;
+    transition: border-color 0.15s, background 0.15s;
+  }
+  .option:hover { border-color: #2A3340; background: #181F28; }
+  .option input { margin-top: 3px; accent-color: #5BE9C4; cursor: pointer; flex-shrink: 0; }
+  .option input:checked + .option-text { color: #F8FAFC; }
+  .option:has(input:checked) { border-color: #5BE9C4; background: #181F28; }
+  .option-text { font-size: 16.5px; color: #BCC4D0; line-height: 1.5; }
+
+  /* ───── Submit ────────────────────────────────────────────────── */
+  .submit-block {
+    margin-top: 64px;
+    padding-top: 40px;
+    border-top: 1px solid #1E242C;
+  }
+  .submit-block p {
+    color: #98A2B3; font-size: 16.5px;
+    line-height: 1.6; margin-bottom: 24px;
+  }
+  .submit-btn {
+    display: inline-block;
+    background: #5BE9C4;
+    color: #0E1217;
+    font-weight: 600;
+    font-size: 17px;
+    padding: 14px 28px;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    font-family: inherit;
+    transition: background 0.15s, transform 0.15s;
+    letter-spacing: 0.01em;
+  }
+  .submit-btn:hover { background: #4DD4B0; transform: translateY(-1px); }
+  .submit-btn:active { transform: translateY(0); }
+  .submit-btn:disabled { opacity: 0.5; cursor: not-allowed; transform: none; }
+
+  .secondary-btn {
+    display: inline-block;
+    background: transparent;
+    color: #98A2B3;
+    font-weight: 500;
+    font-size: 16px;
+    padding: 13px 22px;
+    border: 1px solid #1E242C;
+    border-radius: 8px;
+    cursor: pointer;
+    font-family: inherit;
+    margin-left: 8px;
+    transition: border-color 0.15s, color 0.15s;
+  }
+  .secondary-btn:hover { border-color: #2A3340; color: #E4E7EC; }
+
+  .success {
+    background: rgba(91, 233, 196, 0.08);
+    border: 1px solid rgba(91, 233, 196, 0.3);
+    border-radius: 8px;
+    padding: 16px 18px;
+    color: #5BE9C4;
+    font-size: 16.5px;
+    line-height: 1.55;
+    margin-top: 20px;
+    display: none;
+  }
+  .success.visible { display: block; }
+  .error {
+    background: rgba(239, 68, 68, 0.08);
+    border: 1px solid rgba(239, 68, 68, 0.3);
+    border-radius: 8px;
+    padding: 14px 16px;
+    color: #FCA5A5;
+    font-size: 16px;
+    margin-top: 16px;
+    display: none;
+  }
+  .error.visible { display: block; }
+
+  /* ───── Footer ────────────────────────────────────────────────── */
+  .foot {
+    margin-top: 80px;
+    padding-top: 28px;
+    border-top: 1px solid #1E242C;
+    font-size: 14px;
+    color: #6B7280;
+    letter-spacing: 0.02em;
+    line-height: 1.65;
+  }
+  .foot strong { color: #98A2B3; font-weight: 500; }
+
+  /* ───── A11y ──────────────────────────────────────────────────── */
+  :focus-visible {
+    outline: 2px solid #5BE9C4;
+    outline-offset: 2px;
+  }
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <!-- ── Brand ─────────────────────────────────────────────────── -->
+  <div class="brand">
+    <div class="brand-left">
+      <div class="brand-mark"></div>
+      <div class="brand-text"><strong>Tragwerk</strong> · Internes Arbeitsdokument</div>
+    </div>
+    <div class="brand-logo">
+      <svg viewBox="0 0 2800 354" xmlns="http://www.w3.org/2000/svg" style="fill-rule:evenodd;clip-rule:evenodd;stroke-linejoin:round;stroke-miterlimit:2;">
+        <g>
+          <path d="M261.87,223.241L136.42,14.32L66.3,14.32L0,348.221L80.66,348.221L122.16,139.77L248.04,348.221L318.16,348.221L384.46,14.32L303.85,14.32L261.87,223.241Z" style="fill:#ffffff;fill-rule:nonzero;"/>
+          <path d="M466.03,348.221L491.31,219.86L632.03,219.86L646.34,149.26L505.62,149.26L518.5,84.87L663.51,84.87L677.39,14.27L451.29,14.27L384.94,348.221L466.03,348.221Z" style="fill:#ffffff;fill-rule:nonzero;"/>
+          <path d="M891.04,175.59C925.86,166.05 956.87,137.91 956.87,92.11C956.87,44.41 919.66,14.36 868.62,14.36L727.43,14.36L660.65,348.221L830.46,348.221C897.24,348.221 954,308.15 954,247.62C954,208.5 930.15,183.22 891.04,175.59ZM825.21,283.82L753.66,283.82L768.4,209.41L833.79,209.41C860.03,209.41 873.86,224.2 873.86,242.8C873.87,269.03 852.88,283.82 825.21,283.82ZM831.41,145.97L780.85,145.97L794.73,78.71L847.16,78.71C862.77,77.5 876.4,89.17 877.61,104.78C877.68,105.63 877.7,106.48 877.69,107.33C877.68,132.14 857.65,145.97 831.41,145.97Z" style="fill:#ffffff;fill-rule:nonzero;"/>
+          <path d="M1181.53,107.33C1173.76,104.4 1165.51,102.93 1157.2,102.99C1126.55,102.24 1099.62,123.19 1092.8,153.08L1101.86,107.76L1026.49,107.76L978.31,348.21L1056.54,348.21L1077.05,245.65C1086.11,201.29 1103.76,180.78 1139.49,180.78C1148.47,180.71 1157.44,181.67 1166.2,183.64L1181.53,107.33Z" style="fill:#ffffff;fill-rule:nonzero;"/>
+          <path d="M1399.05,107.81L1391.42,146.92C1381.88,125.45 1351.83,102.08 1309.9,102.08C1233.1,102.08 1178.25,164.52 1178.25,242.32C1178.25,304.76 1221.18,353.94 1284.62,353.94C1314.43,354.4 1342.24,338.95 1357.6,313.39L1350.88,348.21L1427.2,348.21L1475.38,107.8L1399.05,107.8L1399.05,107.81ZM1372.33,219.38C1372.33,257.54 1348.05,289.5 1308.89,289.5C1275.98,289.5 1256.42,268.03 1256.42,235.6C1256.42,199.91 1279.79,166.48 1319.86,166.48C1347.26,164.89 1370.76,185.81 1372.36,213.21C1372.48,215.26 1372.47,217.33 1372.33,219.38Z" style="fill:#ffffff;fill-rule:nonzero;"/>
+          <path d="M1590.8,207.98C1595.57,183.18 1609.88,168.87 1632.3,168.87C1649.59,167.21 1664.95,179.89 1666.6,197.18C1666.78,199.01 1666.79,200.86 1666.64,202.7C1666.61,206.72 1666.13,210.72 1665.21,214.63L1638.5,348.23L1716.73,348.23L1744.87,207.51C1746.72,198.4 1747.68,189.14 1747.73,179.84C1747.73,134.05 1721.49,102.09 1669.5,102.09C1640.9,101.49 1614.37,116.97 1600.81,142.16L1607.49,107.82L1532.6,107.82L1484.42,348.23L1562.65,348.23L1590.8,207.98Z" style="fill:#ffffff;fill-rule:nonzero;"/>
+          <path d="M2019.63,0.01L1989.58,147.45C1980.04,125.99 1952.85,102.13 1910.87,102.13C1834.07,102.13 1779.22,164.57 1779.22,242.37C1779.22,304.81 1822.15,353.99 1885.59,353.99C1915.4,354.45 1943.21,339 1958.57,313.44L1951.89,348.221L2028.21,348.221L2097.85,0.01L2019.63,0.01ZM1973.36,219.38C1973.36,257.54 1949.08,289.5 1909.92,289.5C1877.01,289.5 1857.45,268.03 1857.45,235.6C1857.45,199.91 1880.82,166.48 1920.89,166.48C1948.29,164.89 1971.79,185.81 1973.39,213.21C1973.5,215.26 1973.49,217.33 1973.36,219.38Z" style="fill:#ffffff;fill-rule:nonzero;"/>
+          <path d="M2085.93,269.51C2082.11,328.66 2127.91,353.94 2178.95,353.94C2233.8,353.94 2282.94,318.64 2282.94,265.69C2282.94,239.45 2268.63,219.9 2237.62,207.97L2196.12,191.75C2186.1,187.93 2181.33,182.21 2181.33,174.1C2181.28,163.29 2190.01,154.5 2200.81,154.45C2201.47,154.45 2202.13,154.48 2202.79,154.54C2219.01,154.54 2224.73,166.47 2223.3,179.82L2287.22,179.82C2287.7,127.78 2251.92,102.07 2202.79,102.07C2148.89,102.07 2109.77,133.08 2109.77,183.59C2109.77,212.21 2125.99,232.72 2163.19,247.03L2195.63,259.43C2206.6,263.77 2210.89,268.97 2210.89,277.08C2210.89,294.25 2196.1,301.41 2180.84,301.41C2158.9,301.41 2147.93,289.481 2149.36,269.45L2085.93,269.51Z" style="fill:#ffffff;fill-rule:nonzero;"/>
+          <path d="M2307.73,312.44C2307.51,334.66 2325.34,352.85 2347.56,353.071C2348.59,353.081 2349.63,353.05 2350.66,352.98C2378.58,352.72 2401.01,329.87 2400.75,301.95C2400.94,279.44 2382.85,261.03 2360.34,260.84C2359.34,260.83 2358.34,260.86 2357.35,260.92C2330.05,260.8 2307.82,282.84 2307.7,310.14C2307.69,310.91 2307.7,311.68 2307.73,312.44Z" style="fill:#ffffff;fill-rule:nonzero;"/>
+          <path d="M2800,14.32L2706.98,14.32L2624.94,116.39L2580.58,14.32L2497.54,14.32L2572.43,172.16L2425.55,348.221L2520.48,348.221L2607.29,241.37L2656.9,348.221L2739.42,348.221L2659.28,181.74L2800,14.32Z" style="fill:#ffffff;fill-rule:nonzero;"/>
+        </g>
+      </svg>
+    </div>
+  </div>
+
+  <!-- ── Hero ──────────────────────────────────────────────────── -->
+  <section class="hero">
+    <div class="hero-eyebrow">Feedback-Runde Mandat Relaunch</div>
+    <h1>Ehrliche Antworten, damit ich den richtigen Namen<br>und das passende Design entwickeln kann.</h1>
+    <p>Liebe Matthias, lieber Martin, lieber Günther — danke, dass ihr euch dafür Zeit nehmt. Damit ich mit den Vorarbeiten zur Namens-Evaluierung und dem Screendesign fortfahren kann, brauche ich noch eure <strong>ehrliche, persönliche Sicht</strong> auf einige Fragen, die im Gruppenmeeting nicht alle gleich offen besprochen werden können.</p>
+    <p>Bitte beantwortet die Fragen <strong>einzeln und ohne Rücksprache</strong>. Eure Antworten helfen mir die richtigen Rückschlüsse zu ziehen, werden verdichtet aufbereitet und in der Runde besprochen. Selbstverständlich kann auch alles offengelegt werden.</p>
+    <p>Dauer realistisch: <strong>10 – 12 Minuten</strong>.</p>
+  </section>
+
+  <!-- ── Briefing: IST-Stand ───────────────────────────────────── -->
+  <section class="briefing">
+    <h2>Worauf ihr reagiert — der aktuelle Strategiestand</h2>
+
+    <p>Auf Basis des Meeting-Transkripts vom 21.05., meiner diversen Gespräche mit Martin im Vorfeld, der Keynote in Graz und der bestehenden Website tragwerk.io habe ich eine strategische Grundlage erarbeitet. Die wichtigsten Befunde im Schnellüberblick:<br>&nbsp;</p>
+
+    <h3>Positionierung — wo Tragwerk hin will</h3>
+    <p><strong>Boutique für technologische Transformation</strong>: strategische Tiefe wie die Großen, Umsetzungstempo wie die Builder, deutlich kleiner und persönlicher als beide. Senior-Setup mit skalierbarem Lieferapparat. Vendor-unabhängig, hands-on, Prototypen in Tagen.</p>
+
+    <h3>Zielgruppen-Prioritäten (geklärt am 27.05.)</h3>
+    <ul>
+      <li><strong>Z1 — KMU-Inhaber DACH</strong>: primär auf der Website</li>
+      <li><strong>Z2 — Digital-/Transformationsverantwortliche</strong>: eigene Landingpage</li>
+      <li><strong>Z3 — Stadtwerke / KI-Souveränität</strong>: eigene Landingpage, IKB als Leitreferenz</li>
+      <li><strong>Z4 — Validierende Dritte ("Wer ist das?")</strong>: über Team-Seite + Footer</li>
+    </ul>
+
+    <h3>Name "Tragwerk" — die Faktenbasis</h3>
+    <p>Im DACH-Raum firmieren mindestens <strong>sechs aktive Anbieter</strong> unter "Tragwerk" — fünf davon im Bauingenieurwesen, einer (<em>tragwerk.tirol</em>, Zams) direkt in eurem Akquise-Radius. Die naheliegenden Domains (.at, .tirol, .group, .team, .blog, .plus.at) sind belegt. Nur <em>tragwerk.io</em> ist verfügbar.</p>
+    <p>Der Name wurde unter Zeitdruck nach dem Process-Mining-Pivot gewählt. Im Meeting wurde mehrfach festgestellt, dass die Brücke vom Wort zur Tätigkeit nicht selbsterklärend ist und im allerersten Absatz aufgelöst werden muss.</p>
+
+    <h3>Konstellation — Stand 27.05.</h3>
+    <ul>
+      <li>Einzelunternehmen, angemeldet auf Matthias Sammer</li>
+      <li>Martin ist hauptberuflich CTO bei TouristMobile. Günther ist selbstständiger Berater.</li>
+      <li>Die Rahmenbedingungen der Innenverhältnisse (wer fakturiert was und wie) sind mir nicht bekannt.</li>
+      <li>Zusatzkapazität wird zugekauft, nicht aus dem Kernteam erbracht</li>
+    </ul>
+
+    <h3>Die Hauptbefunde zur aktuellen Website</h3>
+    <ul>
+      <li>Spricht in akademischer Innensprache, nicht in Kundensprache</li>
+      <li>"Vier Rollen"-Struktur dominiert — Kunde muss erst die Rollen verstehen, bevor er die Leistung versteht</li>
+      <li>Prominente Use-Cases (IKB-Story) fehlen vorne</li>
+      <li>Wirkt visuell "schwer und träge" — soll deutlich emotionaler werden (Fotos, Bewegtbild, Animationen)</li>
+    </ul>
+
+    <div class="briefing-source">Vollständiges Strategiedokument: <em>2026-05-26 Strategische Grundlage Tragwerk.md</em> · NFBrands.X</div>
+  </section>
+
+  <!-- ── FORM START ────────────────────────────────────────────── -->
+  <form id="feedback-form">
+
+    <!-- ── Wer antwortet ──────────────────────────────────────── -->
+    <section class="section">
+      <div class="section-header">
+        <div class="section-no">Intro</div>
+        <h2>Wer antwortet?</h2>
+      </div>
+
+      <div class="q">
+        <label class="q-label"><span class="q-no">0.1</span>Wer bist du?</label>
+        <div class="option-group">
+          <label class="option"><input type="radio" name="respondent" value="Matthias Sammer" required><span class="option-text">Matthias Sammer</span></label>
+          <label class="option"><input type="radio" name="respondent" value="Martin Wieser"><span class="option-text">Martin Wieser</span></label>
+          <label class="option"><input type="radio" name="respondent" value="Günther Niederhofer"><span class="option-text">Günther Niederhofer</span></label>
+        </div>
+      </div>
+    </section>
+
+    <!-- ── Teil A — Naming ───────────────────────────────────── -->
+    <section class="section">
+      <div class="section-header">
+        <div class="section-no">Teil A</div>
+        <h2>Der Name "Tragwerk"</h2>
+        <p class="section-intro">Ich möchte wissen, wie ihr persönlich zum Namen steht. Nicht, wie der "richtige" Berater es formulieren würde — sondern ehrlich.</p>
+      </div>
+
+      <div class="q">
+        <label class="q-label" for="bond"><span class="q-no">A.1</span>Wie stark ist deine emotionale Bindung an den Namen "Tragwerk"?</label>
+        <div class="q-hint">0 = "Mir völlig egal, austauschbar." · 10 = "Das ist der Name, mit dem ich diese Firma identifiziere."</div>
+        <div class="slider-wrap">
+          <input type="range" id="bond" name="A1_bond" min="0" max="10" value="5" data-display="bond-val">
+          <span class="slider-val" id="bond-val">5</span>
+        </div>
+        <div class="slider-scale"><span>0 · austauschbar</span><span>10 · unverhandelbar</span></div>
+      </div>
+
+      <div class="q">
+        <label class="q-label" for="openness"><span class="q-no">A.2</span>Wie offen wärst du für einen neuen Namen, wenn er strategisch klar besser passt?</label>
+        <div class="q-hint">0 = "Niemals, ich kämpfe für Tragwerk." · 10 = "Sehr offen, der Name war ein Notnagel."</div>
+        <div class="slider-wrap">
+          <input type="range" id="openness" name="A2_openness" min="0" max="10" value="5" data-display="openness-val">
+          <span class="slider-val" id="openness-val">5</span>
+        </div>
+        <div class="slider-scale"><span>0 · niemals</span><span>10 · jederzeit</span></div>
+      </div>
+
+      <div class="q">
+        <label class="q-label"><span class="q-no">A.3</span>Welche Risiken am Namen "Tragwerk" trägst du <em>selbst</em> mit dir herum? (Mehrfachauswahl)</label>
+        <div class="q-hint">Nur ankreuzen, was du wirklich als Risiko empfindest — nicht, was abstrakt stimmen könnte.</div>
+        <div class="option-group">
+          <label class="option"><input type="checkbox" name="A3_risks" value="Bauwesen-Assoziation überwiegt"><span class="option-text">Die Bauwesen-Assoziation überwiegt zu stark, sie wird uns dauerhaft begleiten.</span></label>
+          <label class="option"><input type="checkbox" name="A3_risks" value="Nahkollision tragwerk.tirol"><span class="option-text">Die geografische Nahkollision (tragwerk.tirol in Zams) ist im Akquise-Alltag ein reales Verwechslungsrisiko.</span></label>
+          <label class="option"><input type="checkbox" name="A3_risks" value="Geringe Differenzierung gegenüber Wettbewerb"><span class="option-text">Die fünf anderen "Tragwerk"-Anbieter im DACH-Raum machen Differenzierung sehr aufwendig.</span></label>
+          <label class="option"><input type="checkbox" name="A3_risks" value="Enge Domain-Strategie"><span class="option-text">Die Domain-Strategie ist eng — nur .io ist frei, das ist langfristig unsauber.</span></label>
+          <label class="option"><input type="checkbox" name="A3_risks" value="Selbst-Übersetzungspflicht im ersten Absatz"><span class="option-text">Dauerhaft den Namen im ersten Absatz übersetzen zu müssen, ist erschöpfend und verstopft die Kommunikation.</span></label>
+          <label class="option"><input type="checkbox" name="A3_risks" value="SEO/LLM-Sichtbarkeit"><span class="option-text">SEO- und LLM-Sichtbarkeit gegen die etablierten Bau-Treffer aufzubauen, kostet zu viel Zeit und Geld.</span></label>
+          <label class="option"><input type="checkbox" name="A3_risks" value="Keine — der Name trägt"><span class="option-text">Keine relevanten Risiken — der Name trägt, die Befürchtungen sind übertrieben.</span></label>
+        </div>
+      </div>
+
+      <div class="q">
+        <label class="q-label" for="A4"><span class="q-no">A.4</span>Was funktioniert am Namen "Tragwerk" <em>für dich</em>?</label>
+        <div class="q-hint">Was geht dir verloren, wenn der Name fällt? Ein, zwei Sätze reichen.</div>
+        <textarea id="A4" name="A4_works" rows="3" placeholder="Z.B.: Die Statik-Metapher trägt das Versprechen 'wir bauen das Fundament eurer KI-Zukunft'."></textarea>
+      </div>
+
+      <div class="q">
+        <label class="q-label"><span class="q-no">A.5</span>Welche Namens-Territorien wären für dich grundsätzlich denkbar? (Mehrfachauswahl)</label>
+        <div class="q-hint">Bewusst weit gefasst — wir wollen wissen, wo deine Komfortzone liegt und wo deine roten Linien.</div>
+        <div class="option-group">
+          <label class="option"><input type="checkbox" name="A5_territories" value="Architektur/Struktur (Tragwerk-nah)"><span class="option-text">Architektur- / Struktur-Metaphern (im Geist von Tragwerk: Fundament, Achse, Anker, Strebe …)</span></label>
+          <label class="option"><input type="checkbox" name="A5_territories" value="Mathematik/Logik"><span class="option-text">Mathematik / Logik / Technologie (Vektor, Lambda, Operator, Axiom …)</span></label>
+          <label class="option"><input type="checkbox" name="A5_territories" value="Latein/Klassisch"><span class="option-text">Latein / klassisch / abstrakt (Fortis, Ratio, Solid, Aequo …)</span></label>
+          <label class="option"><input type="checkbox" name="A5_territories" value="Personennamen / Boutique-Logik"><span class="option-text">Personennamen / Boutique-Logik (Sammer · Wieser, Wieser/Sammer Lab …)</span></label>
+          <label class="option"><input type="checkbox" name="A5_territories" value="Code/Abkürzung/Kürzel"><span class="option-text">Codes / Abkürzungen / Initialen (NTW, TWX, NSW …)</span></label>
+          <label class="option"><input type="checkbox" name="A5_territories" value="Erfundenes Kunstwort"><span class="option-text">Erfundenes Kunstwort / Phantasiename (z.B. Stellar-, Loxon-Logik)</span></label>
+          <label class="option"><input type="checkbox" name="A5_territories" value="Englisch / international"><span class="option-text">Englischer / international tragender Name</span></label>
+          <label class="option"><input type="checkbox" name="A5_territories" value="Tragwerk bleibt"><span class="option-text">Keines davon — Tragwerk bleibt, fertig.</span></label>
+        </div>
+      </div>
+
+      <div class="q">
+        <label class="q-label" for="A6"><span class="q-no">A.6</span>Welches Namens-Territorium ist für dich ein klares <em>No-Go</em>?</label>
+        <div class="q-hint">Wo wir uns die Mühe sparen können, weil du es ohnehin niemals tragen würdest.</div>
+        <textarea id="A6" name="A6_nogo" rows="2" placeholder="Z.B.: Alles mit 'AI' oder 'Smart' im Namen — wirkt sofort billig."></textarea>
+      </div>
+    </section>
+
+    <!-- ── Teil B — Konstellation ──────────────────────────────── -->
+    <section class="section">
+      <div class="section-header">
+        <div class="section-no">Teil B</div>
+        <h2>Konstellation, Verbindlichkeit, Lieferversprechen</h2>
+        <p class="section-intro">Diese Antworten beeinflussen, was die neue Marke nach außen ehrlich versprechen darf — und was nicht. Bitte ehrlich.</p>
+      </div>
+
+      <div class="q">
+        <label class="q-label"><span class="q-no">B.1</span>Wie verbindlich ist Tragwerk für dich in den nächsten 12 Monaten?</label>
+        <div class="option-group">
+          <label class="option"><input type="radio" name="B1_commitment" value="Hauptberuf sobald Einnahmen tragen"><span class="option-text">Tragwerk ist mein Hauptberuf — oder wird es, sobald die Einnahmen tragen.</span></label>
+          <label class="option"><input type="radio" name="B1_commitment" value="Eines von mehreren parallelen Mandaten"><span class="option-text">Tragwerk ist eines von mehreren parallelen Mandaten — voraussichtlich auf Dauer.</span></label>
+          <label class="option"><input type="radio" name="B1_commitment" value="Experiment mit Ausstiegsoption"><span class="option-text">Tragwerk ist ein Experiment — wenn es nicht abhebt, gehe ich weiter.</span></label>
+          <label class="option"><input type="radio" name="B1_commitment" value="Vertragspartner, kein Mitgründer"><span class="option-text">Ich sehe mich als Vertragspartner, nicht als Mitgründer.</span></label>
+        </div>
+      </div>
+
+      <div class="q">
+        <label class="q-label" for="capacity"><span class="q-no">B.2</span>Realistische Tragwerk-Kapazität pro Woche in den nächsten 6 Monaten?</label>
+        <div class="q-hint">Bitte ehrlich — diese Zahl bestimmt, was wir nach außen versprechen können.</div>
+        <div class="slider-wrap">
+          <input type="range" id="capacity" name="B2_capacity" min="0" max="5" step="0.5" value="2" data-display="capacity-val">
+          <span class="slider-val" id="capacity-val">2,0</span>
+        </div>
+        <div class="slider-scale"><span>0 Tage/Woche</span><span>5 Tage/Woche</span></div>
+      </div>
+
+      <div class="q">
+        <label class="q-label" for="boutique-honest"><span class="q-no">B.3</span>Wie ehrlich findest du das Versprechen "Senior-Boutique mit skalierbarem Lieferapparat"?</label>
+        <div class="q-hint">0 = "Reines Marketing." · 10 = "Trifft uns punktgenau, wir können das halten."</div>
+        <div class="slider-wrap">
+          <input type="range" id="boutique-honest" name="B3_boutique_honest" min="0" max="10" value="5" data-display="boutique-honest-val">
+          <span class="slider-val" id="boutique-honest-val">5</span>
+        </div>
+        <div class="slider-scale"><span>0 · Marketing</span><span>10 · ehrlich</span></div>
+      </div>
+
+      <div class="q">
+        <label class="q-label" for="B4"><span class="q-no">B.4</span>Was sollte ich über eure Drei-Personen-Konstellation wissen, was im Gruppen-Meeting nicht gesagt wurde?</label>
+        <div class="q-hint">Transparenz und Klarheit ist essentiell wichtig. Lob, Bedenken, Fragen, Kritik, Ängste, etc.</div>
+        <textarea id="B4" name="B4_unsaid" rows="4" placeholder="Z.B. Bedenken zur Verbindlichkeit eines Partners, latente Konflikte, unklare Rollen, …"></textarea>
+      </div>
+
+    </section>
+
+    <!-- ── Teil C — Marke & Versprechen ────────────────────────── -->
+    <section class="section">
+      <div class="section-header">
+        <div class="section-no">Teil C</div>
+        <h2>Marke, Versprechen, Tonalität</h2>
+        <p class="section-intro">Diese Antworten formen den Tonfall und die Schärfe der neuen Außendarstellung.</p>
+      </div>
+
+      <div class="q">
+        <label class="q-label" for="C1"><span class="q-no">C.1</span>Was darf die Marke nach außen versprechen — was wir sicher halten können?</label>
+        <textarea id="C1" name="C1_can_promise" rows="3" placeholder="Z.B.: Hands-on, Prototyp in 2 Wochen, vendor-unabhängige Beratung."></textarea>
+      </div>
+
+      <div class="q">
+        <label class="q-label" for="C2"><span class="q-no">C.2</span>Was darf die Marke <em>nie</em> versprechen?</label>
+        <textarea id="C2" name="C2_never_promise" rows="3" placeholder="Z.B.: Vollzeit-Verfügbarkeit ab nächster Woche, garantierter ROI, …"></textarea>
+      </div>
+
+      <div class="q">
+        <label class="q-label" for="C3"><span class="q-no">C.3</span>Was begeistert dich an Tragwerk am stärksten?</label>
+        <textarea id="C3" name="C3_excitement" rows="3" placeholder="Was bringt dich morgens dazu, hier weiterzumachen?"></textarea>
+      </div>
+
+      <div class="q">
+        <label class="q-label" for="C4"><span class="q-no">C.4</span>Wovor hast du Bammel, was Tragwerk angeht?</label>
+        <textarea id="C4" name="C4_fear" rows="3" placeholder="Welches Szenario hält dich nachts wach?"></textarea>
+      </div>
+
+      <div class="q">
+        <label class="q-label" for="C5"><span class="q-no">C.5</span>Wenn du in 3 Jahren auf Tragwerk zurückblickst — was wäre das beste denkbare Outcome?</label>
+        <textarea id="C5" name="C5_vision" rows="3" placeholder="Konkret und persönlich, nicht in Marketing-Sprache."></textarea>
+      </div>
+    </section>
+
+    <!-- ── Teil D — Sonstiges ──────────────────────────────────── -->
+    <section class="section">
+      <div class="section-header">
+        <div class="section-no">Teil D</div>
+        <h2>Was ich vergessen habe</h2>
+      </div>
+
+      <div class="q">
+        <label class="q-label" for="D1"><span class="q-no">D.1</span>Was sollte ich auf jeden Fall noch fragen — was hier fehlt?</label>
+        <textarea id="D1" name="D1_missing" rows="3" placeholder="Optional. Wenn dir nichts einfällt: leer lassen."></textarea>
+      </div>
+
+      <div class="q">
+        <label class="q-label" for="D2"><span class="q-no">D.2</span>Wie ehrlich konntest du diese Fragen wirklich beantworten?</label>
+        <div class="q-hint">0 = "Sehr gefiltert." · 10 = "Voll ehrlich." Hilft uns einzuschätzen, wie wir das Ergebnis lesen müssen.</div>
+        <div class="slider-wrap">
+          <input type="range" id="D2" name="D2_honesty" min="0" max="10" value="8" data-display="D2-val">
+          <span class="slider-val" id="D2-val">8</span>
+        </div>
+        <div class="slider-scale"><span>0 · gefiltert</span><span>10 · voll ehrlich</span></div>
+      </div>
+    </section>
+
+    <!-- ── Submit ──────────────────────────────────────────────── -->
+    <div class="submit-block">
+      <p>Mit Klick auf <strong>"Antworten senden"</strong> werden deine Antworten direkt und vollständig übermittelt. Eine lokale Sicherungsdatei (<code style="background:#141A22;padding:1px 6px;border-radius:3px;font-size:15px;">.json</code>) wird dabei automatisch heruntergeladen.</p>
+      <button type="submit" class="submit-btn">Antworten senden</button>
+      <button type="button" class="secondary-btn" id="json-only">Nur lokal speichern</button>
+      <div class="success" id="success-msg">
+        ✓ Antworten gesammelt. Die Backup-Datei wurde heruntergeladen — bitte als Anhang an die E-Mail hängen, bevor du sie sendest. Falls dein E-Mail-Programm nicht automatisch geöffnet hat, schicke die Datei direkt an matthias.lechner@gmail.com.
+      </div>
+      <div class="error" id="error-msg"></div>
+    </div>
+
+  </form>
+
+  <!-- ── Footer ──────────────────────────────────────────────── -->
+  <div class="foot">
+    <strong>NFBrands.X · Tragwerk-Mandat</strong> · Dokument-Stand 27.05.2026 · Vertraulich · Erstellt für die interne Feedback-Runde der drei Partner. Alle Angaben werden maximal vertraulich behandelt.
+  </div>
+
+</div>
+
+<script>
+  // ─── Slider live values ──────────────────────────────────────
+  document.querySelectorAll('input[type="range"]').forEach(slider => {
+    const display = document.getElementById(slider.dataset.display);
+    const update = () => {
+      const val = parseFloat(slider.value);
+      display.textContent = (slider.step && parseFloat(slider.step) < 1)
+        ? val.toFixed(1).replace('.', ',')
+        : val;
+    };
+    slider.addEventListener('input', update);
+    update();
+  });
+
+  // ─── Form helpers ────────────────────────────────────────────
+  function collectAnswers() {
+    const form = document.getElementById('feedback-form');
+    const fd = new FormData(form);
+    const out = {
+      _meta: {
+        timestamp: new Date().toISOString(),
+        document: "Tragwerk Feedback-Runde Relaunch",
+        version: "1.0 (2026-05-27)"
+      },
+      respondent: fd.get('respondent') || '— nicht angegeben —',
+      answers: {}
+    };
+
+    // Single-value fields
+    const singleFields = [
+      ['A1_bond', 'A.1 Emotionale Bindung an "Tragwerk" (0–10)'],
+      ['A2_openness', 'A.2 Offenheit für neuen Namen (0–10)'],
+      ['A4_works', 'A.4 Was funktioniert am Namen "Tragwerk"'],
+      ['A6_nogo', 'A.6 No-Go-Territorium'],
+      ['B1_commitment', 'B.1 Verbindlichkeit Tragwerk 12 Monate'],
+      ['B2_capacity', 'B.2 Kapazität (Tage/Woche, 0–5)'],
+      ['B3_boutique_honest', 'B.3 Ehrlichkeit "Senior-Boutique" (0–10)'],
+      ['B4_unsaid', 'B.4 Was im Meeting nicht gesagt wurde'],
+      ['C1_can_promise', 'C.1 Was darf die Marke versprechen'],
+      ['C2_never_promise', 'C.2 Was darf die Marke nie versprechen'],
+      ['C3_excitement', 'C.3 Was begeistert dich'],
+      ['C4_fear', 'C.4 Wovor hast du Bammel'],
+      ['C5_vision', 'C.5 Vision in 3 Jahren'],
+      ['D1_missing', 'D.1 Was fehlt'],
+      ['D2_honesty', 'D.2 Wie ehrlich beantwortet (0–10)']
+    ];
+    singleFields.forEach(([key, label]) => {
+      out.answers[label] = fd.get(key) || '';
+    });
+
+    // Multi-value fields (checkboxes)
+    out.answers['A.3 Wahrgenommene Risiken am Namen'] = fd.getAll('A3_risks');
+    out.answers['A.5 Akzeptable Namens-Territorien'] = fd.getAll('A5_territories');
+
+    return out;
+  }
+
+  function downloadJSON(data) {
+    const json = JSON.stringify(data, null, 2);
+    const blob = new Blob([json], { type: 'application/json' });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    const name = (data.respondent || 'unbekannt').replace(/\s+/g, '-');
+    const date = new Date().toISOString().slice(0, 10);
+    a.href = url;
+    a.download = `tragwerk-feedback-${name}-${date}.json`;
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+    URL.revokeObjectURL(url);
+  }
+
+  // ─── Formspree endpoint — hier eintragen nach Anlage des Accounts ──
+  const FORMSPREE_ENDPOINT = 'https://formspree.io/f/mojbykbe';
+  // Beispiel: 'https://formspree.io/f/xyzabcde'
+
+  function validateRespondent(data) {
+    if (!data.respondent || data.respondent === '— nicht angegeben —') {
+      const err = document.getElementById('error-msg');
+      err.textContent = 'Bitte gib zuerst an, wer antwortet (Intro).';
+      err.classList.add('visible');
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+      return false;
+    }
+    document.getElementById('error-msg').classList.remove('visible');
+    return true;
+  }
+
+  // ─── Submit → Formspree ──────────────────────────────────────
+  document.getElementById('feedback-form').addEventListener('submit', async (e) => {
+    e.preventDefault();
+    const data = collectAnswers();
+    if (!validateRespondent(data)) return;
+
+    const btn = e.target.querySelector('.submit-btn');
+    btn.disabled = true;
+    btn.textContent = 'Wird gesendet …';
+
+    // JSON-Backup lokal speichern
+    downloadJSON(data);
+
+    // Flache Payload für Formspree aufbauen
+    const payload = {
+      _subject: `Tragwerk Feedback · ${data.respondent} · ${new Date().toISOString().slice(0,10)}`,
+      respondent: data.respondent,
+      timestamp: data._meta.timestamp,
+    };
+    Object.entries(data.answers).forEach(([label, value]) => {
+      payload[label] = Array.isArray(value) ? value.join(' | ') : value;
+    });
+
+    try {
+      const res = await fetch(FORMSPREE_ENDPOINT, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' },
+        body: JSON.stringify(payload)
+      });
+      if (res.ok) {
+        const msg = document.getElementById('success-msg');
+        msg.textContent = '✓ Antworten erfolgreich übermittelt. Die lokale Sicherungsdatei wurde ebenfalls heruntergeladen.';
+        msg.classList.add('visible');
+        btn.textContent = 'Gesendet ✓';
+      } else {
+        throw new Error(`HTTP ${res.status}`);
+      }
+    } catch (err) {
+      btn.disabled = false;
+      btn.textContent = 'Antworten senden';
+      const errEl = document.getElementById('error-msg');
+      errEl.textContent = 'Übermittlung fehlgeschlagen. Bitte prüfe den Formspree-Endpoint oder nutze "Nur lokal speichern" als Ausweichlösung.';
+      errEl.classList.add('visible');
+    }
+  });
+
+  // ─── Nur lokal speichern ─────────────────────────────────────
+  document.getElementById('json-only').addEventListener('click', () => {
+    const data = collectAnswers();
+    if (!validateRespondent(data)) return;
+    downloadJSON(data);
+    const msg = document.getElementById('success-msg');
+    msg.textContent = '✓ Datei lokal gespeichert. Bitte schicke sie manuell an matthias.lechner@gmail.com, falls du sie nicht bereits gesendet hast.';
+    msg.classList.add('visible');
+  });
+</script>
+
+</body>
+</html>
