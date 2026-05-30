@@ -1,0 +1,697 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Tragwerk · Folgebefragung · Juni 2026</title>
+<style>
+  :root {
+    --bg: #0f0f0f;
+    --surface: #1a1a1a;
+    --surface2: #242424;
+    --border: #2e2e2e;
+    --accent: #3db89a;
+    --text: #e8e8e8;
+    --muted: #888;
+    --focus: rgba(61,184,154,0.2);
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    font-family: 'Helvetica Neue', Arial, sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    line-height: 1.6;
+  }
+
+  /* HEADER */
+  header {
+    border-bottom: 1px solid var(--border);
+    padding: 48px 60px 36px;
+    max-width: 760px;
+    margin: 0 auto;
+  }
+  .eyebrow {
+    font-size: 13px;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    color: var(--muted);
+    margin-bottom: 12px;
+  }
+  header h1 {
+    font-size: 30px;
+    font-weight: 300;
+    letter-spacing: -0.5px;
+    color: var(--accent);
+    margin-bottom: 8px;
+  }
+  header p {
+    color: var(--muted);
+    font-size: 16px;
+  }
+
+  /* INTRO */
+  .intro {
+    max-width: 760px;
+    margin: 0 auto;
+    padding: 36px 60px;
+    border-bottom: 1px solid var(--border);
+  }
+  .intro-label {
+    font-size: 12px;
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    color: var(--muted);
+    margin-bottom: 16px;
+  }
+  .intro p {
+    font-size: 16px;
+    color: #ccc;
+    line-height: 1.75;
+    margin-bottom: 12px;
+  }
+  .intro p:last-child { margin-bottom: 0; }
+  .finding {
+    background: var(--surface);
+    border-left: 3px solid rgba(61,184,154,0.35);
+    border-radius: 0 6px 6px 0;
+    padding: 14px 18px;
+    margin: 16px 0;
+    font-size: 15px;
+    color: #bbb;
+    line-height: 1.65;
+  }
+  .finding strong { color: var(--accent); }
+
+  /* FORM */
+  form {
+    max-width: 760px;
+    margin: 0 auto;
+    padding: 0 60px 80px;
+  }
+
+  .section-block {
+    margin-top: 52px;
+  }
+  .section-label {
+    font-size: 12px;
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    color: var(--muted);
+    padding-bottom: 10px;
+    border-bottom: 1px solid var(--border);
+    margin-bottom: 32px;
+  }
+
+  .field {
+    margin-bottom: 36px;
+  }
+  label {
+    display: block;
+    font-size: 16px;
+    color: var(--text);
+    margin-bottom: 6px;
+    font-weight: 500;
+  }
+  .field-note {
+    font-size: 14px;
+    color: var(--muted);
+    margin-bottom: 12px;
+    line-height: 1.5;
+  }
+
+  input[type="text"],
+  textarea,
+  select {
+    width: 100%;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    color: var(--text);
+    font-size: 16px;
+    font-family: inherit;
+    padding: 12px 16px;
+    outline: none;
+    transition: border-color 0.2s;
+  }
+  input[type="text"]:focus,
+  textarea:focus,
+  select:focus {
+    border-color: rgba(61,184,154,0.5);
+    box-shadow: 0 0 0 3px var(--focus);
+  }
+  textarea { resize: vertical; min-height: 100px; }
+  select { cursor: pointer; }
+  select option { background: #1a1a1a; }
+
+  /* RANGE SLIDER */
+  .slider-wrap { display: flex; align-items: center; gap: 16px; margin-top: 8px; }
+  input[type="range"] {
+    flex: 1;
+    -webkit-appearance: none;
+    appearance: none;
+    height: 4px;
+    background: var(--border);
+    border-radius: 2px;
+    outline: none;
+    cursor: pointer;
+  }
+  input[type="range"]::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    width: 18px;
+    height: 18px;
+    border-radius: 50%;
+    background: var(--accent);
+    cursor: pointer;
+  }
+  .slider-labels {
+    display: flex;
+    justify-content: space-between;
+    font-size: 13px;
+    color: var(--muted);
+    margin-top: 6px;
+  }
+  .slider-val {
+    font-size: 22px;
+    font-weight: 300;
+    color: var(--accent);
+    min-width: 28px;
+    text-align: center;
+  }
+
+  /* RADIO GROUP */
+  .radio-group { display: flex; flex-direction: column; gap: 10px; margin-top: 8px; }
+  .radio-option {
+    display: flex;
+    align-items: flex-start;
+    gap: 12px;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    padding: 14px 16px;
+    cursor: pointer;
+    transition: border-color 0.2s;
+  }
+  .radio-option:hover { border-color: rgba(61,184,154,0.3); }
+  .radio-option input[type="radio"] { margin-top: 2px; accent-color: #3db89a; flex-shrink: 0; }
+  .radio-option.selected { border-color: rgba(61,184,154,0.5); background: rgba(61,184,154,0.07); }
+  .radio-label { font-size: 16px; color: var(--text); }
+  .radio-desc { font-size: 14px; color: var(--muted); margin-top: 2px; }
+
+  /* CHECKBOX GROUP */
+  .checkbox-group { display: flex; flex-direction: column; gap: 8px; margin-top: 8px; }
+  .checkbox-option {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    padding: 12px 16px;
+    cursor: pointer;
+    transition: border-color 0.2s;
+    font-size: 16px;
+  }
+  .checkbox-option:hover { border-color: rgba(61,184,154,0.3); }
+  .checkbox-option input[type="checkbox"] { accent-color: #3db89a; }
+
+  /* RANK */
+  .rank-list { display: flex; flex-direction: column; gap: 8px; margin-top: 8px; }
+  .rank-item {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    padding: 12px 16px;
+  }
+  .rank-num {
+    font-size: 13px;
+    color: var(--muted);
+    min-width: 20px;
+  }
+  .rank-item select {
+    border: none;
+    background: transparent;
+    padding: 0;
+    font-size: 16px;
+    color: var(--text);
+    flex: 1;
+  }
+  .rank-item select:focus { box-shadow: none; }
+
+  /* SUBMIT */
+  .submit-area {
+    margin-top: 48px;
+    padding-top: 32px;
+    border-top: 1px solid var(--border);
+  }
+  .submit-area p {
+    font-size: 15px;
+    color: var(--muted);
+    margin-bottom: 20px;
+  }
+  button[type="submit"] {
+    background: var(--accent);
+    color: #0f0f0f;
+    border: none;
+    border-radius: 6px;
+    padding: 14px 32px;
+    font-size: 16px;
+    font-weight: 600;
+    font-family: inherit;
+    cursor: pointer;
+    transition: opacity 0.2s;
+    letter-spacing: 0.3px;
+  }
+  button[type="submit"]:hover { opacity: 0.85; }
+
+  /* HIDDEN */
+  input[name="_subject"] { display: none; }
+
+  /* SUCCESS */
+  #success-msg {
+    display: none;
+    background: rgba(58,138,110,0.1);
+    border: 1px solid rgba(58,138,110,0.3);
+    border-radius: 8px;
+    padding: 24px 28px;
+    margin-top: 32px;
+    color: #6dc9a8;
+    font-size: 15px;
+  }
+
+  footer {
+    border-top: 1px solid var(--border);
+    padding: 20px 60px;
+    font-size: 14px;
+    color: var(--muted);
+    max-width: 760px;
+    margin: 0 auto;
+  }
+
+  @media (max-width: 600px) {
+    header, .intro, form, footer { padding-left: 20px; padding-right: 20px; }
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="eyebrow">Tragwerk · Intern · Runde 2</div>
+  <h1>Folgebefragung</h1>
+  <p>Juni 2026 · ca. 10 Minuten</p>
+</header>
+
+<!-- EINLEITUNG -->
+<div class="intro">
+  <div class="intro-label">Warum diese Fragen</div>
+  <p>Runde 1 hat breiten Konsens in einigen Bereichen gezeigt – und konkrete offene Punkte in anderen. Diese zweite Runde zielt auf genau diese Lücken.</p>
+
+  <div class="finding"><strong>Was geklärt ist:</strong> Null emotionale Bindung an „Tragwerk", hohe Offenheit für einen neuen Namen, klare No-Gos (KI/AI, Bau-Begriffe direkt im Namen), Konsens-Territorien für die Namenssuche.</div>
+
+  <div class="finding"><strong>Was noch offen ist:</strong> Der gemeinsame Wachstumspfad (Tirol, DACH oder international?), der Stellenwert von Transformationsberatung als eigene Kompetenz, und konkrete Vorstellungen zur Website – wer soll sie ansprechen, was soll sie auslösen, was steht vorne.</div>
+
+  <p>Die Antworten auf diese Fragen entscheiden direkt, wie die Website architektonisch aufgebaut wird und in welche Richtung die Namenssuche geht.</p>
+</div>
+
+<!-- FORM -->
+<form action="https://formspree.io/f/xeedwezj" method="POST" id="feedbackForm">
+  <input type="hidden" name="_subject" value="Tragwerk Folgebefragung">
+  <input type="hidden" name="formversion" value="runde2-2026-06">
+
+  <!-- NAME -->
+  <div class="section-block">
+    <div class="section-label">Wer antwortet?</div>
+    <div class="field">
+      <label>Wer bist du?</label>
+      <div class="radio-group">
+        <label class="radio-option">
+          <input type="radio" name="respondent" value="Matthias Sammer" required>
+          <div><div class="radio-label">Matthias Sammer</div></div>
+        </label>
+        <label class="radio-option">
+          <input type="radio" name="respondent" value="Martin Wieser">
+          <div><div class="radio-label">Martin Wieser</div></div>
+        </label>
+        <label class="radio-option">
+          <input type="radio" name="respondent" value="Günther Niederhofer">
+          <div><div class="radio-label">Günther Niederhofer</div></div>
+        </label>
+      </div>
+    </div>
+  </div>
+
+  <!-- ─── BLOCK S: STRATEGIE ─── -->
+  <div class="section-block">
+    <div class="section-label">S · Strategie &amp; Vision</div>
+
+    <!-- S.1 Primärmarkt -->
+    <div class="field">
+      <label>S.1 · Welcher Markt hat in den nächsten 2 Jahren Priorität?</label>
+      <div class="field-note">Nicht wo Tragwerk langfristig sein soll – sondern wo ihr in den nächsten 24 Monaten aktiv akquiriert und euch einen Namen macht.</div>
+      <div class="radio-group">
+        <label class="radio-option">
+          <input type="radio" name="s1_markt" value="tirol">
+          <div>
+            <div class="radio-label">Tirol / Vorarlberg</div>
+            <div class="radio-desc">Regionale Verankerung, persönliche Netzwerke, KMU-Fokus</div>
+          </div>
+        </label>
+        <label class="radio-option">
+          <input type="radio" name="s1_markt" value="dach">
+          <div>
+            <div class="radio-label">DACH-Raum</div>
+            <div class="radio-desc">Deutschland, Österreich, Schweiz – digitale Akquise, größere Unternehmen</div>
+          </div>
+        </label>
+        <label class="radio-option">
+          <input type="radio" name="s1_markt" value="international">
+          <div>
+            <div class="radio-label">International von Anfang an</div>
+            <div class="radio-desc">Englisch als primäre Sprache, globale Positionierung</div>
+          </div>
+        </label>
+        <label class="radio-option">
+          <input type="radio" name="s1_markt" value="other">
+          <div>
+            <div class="radio-label">Andere Logik</div>
+            <div class="radio-desc">Nicht geografisch, sondern nach Branche oder Mandatstyp</div>
+          </div>
+        </label>
+      </div>
+      <div class="field" style="margin-top:12px;margin-bottom:0;">
+        <textarea name="s1_markt_kommentar" placeholder="Ergänzung oder Begründung (optional)" rows="2"></textarea>
+      </div>
+    </div>
+
+    <!-- S.2 Transformationskompetenz -->
+    <div class="field">
+      <label>S.2 · Transformationsberatung: Versprechen oder Aufbauziel?</label>
+      <div class="field-note">Günther hat in Runde 1 darauf hingewiesen, dass Tragwerk nicht nur als technologischer Builder, sondern als strategischer Umsetzungspartner wahrgenommen werden sollte. Die Frage ist, ob das heute schon Teil des Angebots ist – oder bewusst aufgebaut wird.</div>
+      <div class="radio-group">
+        <label class="radio-option">
+          <input type="radio" name="s2_transformation" value="heute">
+          <div>
+            <div class="radio-label">Heute schon lieferbar</div>
+            <div class="radio-desc">Wir können das bereits – es braucht nur die richtige Sprache dafür</div>
+          </div>
+        </label>
+        <label class="radio-option">
+          <input type="radio" name="s2_transformation" value="aufbau">
+          <div>
+            <div class="radio-label">Bewusstes Aufbauziel</div>
+            <div class="radio-desc">Wir entwickeln diese Kompetenz gezielt in den nächsten 12–18 Monaten</div>
+          </div>
+        </label>
+        <label class="radio-option">
+          <input type="radio" name="s2_transformation" value="kein_fokus">
+          <div>
+            <div class="radio-label">Kein primärer Fokus</div>
+            <div class="radio-desc">Tragwerk soll primär technologischer Builder und Advisor bleiben</div>
+          </div>
+        </label>
+      </div>
+    </div>
+
+    <!-- S.3 Wachstumslogik -->
+    <div class="field">
+      <label>S.3 · Was ist langfristig die Wachstumslogik von Tragwerk?</label>
+      <div class="field-note">Martin hat skalierbare Produkte und Investments erwähnt. Matthias S. denkt in geografischer Expansion. Günther in Umsatzzahlen und Vollzeitanstellung. Was treibt euch persönlich?</div>
+      <div class="checkbox-group">
+        <label class="checkbox-option">
+          <input type="checkbox" name="s3_wachstum" value="mandate_skalieren">
+          Mehr und größere Mandate – klassisches Consulting-Wachstum
+        </label>
+        <label class="checkbox-option">
+          <input type="checkbox" name="s3_wachstum" value="produkte">
+          Eigene skalierbare Produkte oder Software
+        </label>
+        <label class="checkbox-option">
+          <input type="checkbox" name="s3_wachstum" value="ventures">
+          Ventures und Beteiligungen aus Mandaten heraus
+        </label>
+        <label class="checkbox-option">
+          <input type="checkbox" name="s3_wachstum" value="team_aufbau">
+          Team aufbauen und Kapazität verbreitern
+        </label>
+        <label class="checkbox-option">
+          <input type="checkbox" name="s3_wachstum" value="netzwerk">
+          Partnernetzwerk systematisch ausbauen
+        </label>
+      </div>
+      <div class="field" style="margin-top:12px;margin-bottom:0;">
+        <textarea name="s3_wachstum_kommentar" placeholder="Was fehlt in dieser Liste? Was gewichtest du am stärksten?" rows="2"></textarea>
+      </div>
+    </div>
+
+    <!-- S.4 Commitment-Trigger -->
+    <div class="field">
+      <label>S.4 · Was muss passieren, damit du Tragwerk zur Hauptpriorität machst?</label>
+      <div class="field-note">Konkret – nicht „wenn es läuft". Was wäre das erste Ereignis, das dein Commitment verändert?</div>
+      <textarea name="s4_trigger" placeholder="z.B. erstes gemeinsames Projekt abgeschlossen, bestimmter Umsatz erreicht, bestehendes Mandat endet ..." rows="3"></textarea>
+    </div>
+
+  </div>
+
+  <!-- ─── BLOCK W: WEBSITE ─── -->
+  <div class="section-block">
+    <div class="section-label">W · Website &amp; Architektur</div>
+
+    <!-- W.1 Zielgruppe -->
+    <div class="field">
+      <label>W.1 · Wen soll die Website primär ansprechen?</label>
+      <div class="field-note">Stell dir vor, du schreibst gerade an eine konkrete Person. Wer ist das?</div>
+      <div class="radio-group">
+        <label class="radio-option">
+          <input type="radio" name="w1_zielgruppe" value="cto_cdo">
+          <div>
+            <div class="radio-label">CTO / CDO eines mittelständischen Unternehmens</div>
+            <div class="radio-desc">Technisch versiert, sucht Sparring und Umsetzungskompetenz</div>
+          </div>
+        </label>
+        <label class="radio-option">
+          <input type="radio" name="w1_zielgruppe" value="ceo_kmu">
+          <div>
+            <div class="radio-label">CEO / Geschäftsführer eines KMU</div>
+            <div class="radio-desc">Weniger technisch, sucht Orientierung und Vertrauen</div>
+          </div>
+        </label>
+        <label class="radio-option">
+          <input type="radio" name="w1_zielgruppe" value="innovation">
+          <div>
+            <div class="radio-label">Innovations- / Transformationsverantwortliche in Konzernen</div>
+            <div class="radio-desc">Hat Budget, kennt die Sprache, sucht externe Expertise</div>
+          </div>
+        </label>
+        <label class="radio-option">
+          <input type="radio" name="w1_zielgruppe" value="startup">
+          <div>
+            <div class="radio-label">Startup / Scaleup mit technischen Skalierungsfragen</div>
+            <div class="radio-desc">Schnell, direkt, braucht Hands-on-Partner</div>
+          </div>
+        </label>
+      </div>
+      <div class="field" style="margin-top:12px;margin-bottom:0;">
+        <textarea name="w1_zielgruppe_kommentar" placeholder="Wen würdest du ergänzen oder anders beschreiben?" rows="2"></textarea>
+      </div>
+    </div>
+
+    <!-- W.2 30-Sekunden-Test -->
+    <div class="field">
+      <label>W.2 · Was soll ein Besucher nach 30 Sekunden auf der Website verstanden haben?</label>
+      <div class="field-note">Nicht das vollständige Leistungsangebot – sondern den einen Satz, der hängen bleibt.</div>
+      <textarea name="w2_30sek" placeholder="„Nach 30 Sekunden weiß jeder Besucher, dass Tragwerk ..."" rows="3" required></textarea>
+    </div>
+
+    <!-- W.3 Leistungshierarchie -->
+    <div class="field">
+      <label>W.3 · Welche Leistung steht vorne – welche hinten?</label>
+      <div class="field-note">Wähle für jede Leistung eine Priorität. Was kommt zuerst auf der Website, was eher als ergänzendes Angebot?</div>
+      <div style="display:grid;gap:10px;margin-top:8px;">
+        <div class="rank-item">
+          <span class="rank-num">●</span>
+          <span style="flex:1;font-size:16px;">Technologieberatung &amp; Strategie</span>
+          <select name="w3_beratung">
+            <option value="">Priorität wählen</option>
+            <option value="1">1 – Hauptleistung</option>
+            <option value="2">2 – Wichtige Ergänzung</option>
+            <option value="3">3 – Hintergrund</option>
+          </select>
+        </div>
+        <div class="rank-item">
+          <span class="rank-num">●</span>
+          <span style="flex:1;font-size:16px;">Umsetzung / Build</span>
+          <select name="w3_build">
+            <option value="">Priorität wählen</option>
+            <option value="1">1 – Hauptleistung</option>
+            <option value="2">2 – Wichtige Ergänzung</option>
+            <option value="3">3 – Hintergrund</option>
+          </select>
+        </div>
+        <div class="rank-item">
+          <span class="rank-num">●</span>
+          <span style="flex:1;font-size:16px;">Transformationsbegleitung</span>
+          <select name="w3_transformation">
+            <option value="">Priorität wählen</option>
+            <option value="1">1 – Hauptleistung</option>
+            <option value="2">2 – Wichtige Ergänzung</option>
+            <option value="3">3 – Hintergrund</option>
+          </select>
+        </div>
+        <div class="rank-item">
+          <span class="rank-num">●</span>
+          <span style="flex:1;font-size:16px;">KI-Kompetenz (Technik + Business + Compliance)</span>
+          <select name="w3_ki">
+            <option value="">Priorität wählen</option>
+            <option value="1">1 – Hauptleistung</option>
+            <option value="2">2 – Wichtige Ergänzung</option>
+            <option value="3">3 – Hintergrund</option>
+          </select>
+        </div>
+      </div>
+    </div>
+
+    <!-- W.4 Ziel der Website -->
+    <div class="field">
+      <label>W.4 · Was ist das primäre Ziel der Website?</label>
+      <div class="radio-group">
+        <label class="radio-option">
+          <input type="radio" name="w4_ziel" value="leads">
+          <div>
+            <div class="radio-label">Neue Mandante gewinnen</div>
+            <div class="radio-desc">Kontaktaufnahme auslösen, Anfragen generieren</div>
+          </div>
+        </label>
+        <label class="radio-option">
+          <input type="radio" name="w4_ziel" value="glaubwuerdigkeit">
+          <div>
+            <div class="radio-label">Glaubwürdigkeit aufbauen</div>
+            <div class="radio-desc">Besucher, die bereits über Empfehlung kommen, von der Qualität überzeugen</div>
+          </div>
+        </label>
+        <label class="radio-option">
+          <input type="radio" name="w4_ziel" value="recruiting">
+          <div>
+            <div class="radio-label">Talente und Partner anziehen</div>
+            <div class="radio-desc">Netzwerk aufbauen, zukünftige Teammates oder Kooperationspartner ansprechen</div>
+          </div>
+        </label>
+      </div>
+    </div>
+
+    <!-- W.5 Tonalität -->
+    <div class="field">
+      <label>W.5 · Wie soll Tragwerk auf der Website klingen?</label>
+      <div class="field-note">Bewerte jeden Gegensatz auf der Skala. Wo liegt der richtige Ton für euch?</div>
+
+      <div style="display:grid;gap:20px;margin-top:12px;">
+
+        <div>
+          <div style="display:flex;justify-content:space-between;font-size:14px;color:var(--muted);margin-bottom:4px;">
+            <span>Bodenständig / direkt</span><span>Visionär / inspirierend</span>
+          </div>
+          <div class="slider-wrap">
+            <input type="range" min="0" max="10" value="5" name="w5_ton1" oninput="this.nextElementSibling.textContent=this.value">
+            <span class="slider-val">5</span>
+          </div>
+        </div>
+
+        <div>
+          <div style="display:flex;justify-content:space-between;font-size:14px;color:var(--muted);margin-bottom:4px;">
+            <span>Technisch / präzise</span><span>Geschäftlich / strategisch</span>
+          </div>
+          <div class="slider-wrap">
+            <input type="range" min="0" max="10" value="5" name="w5_ton2" oninput="this.nextElementSibling.textContent=this.value">
+            <span class="slider-val">5</span>
+          </div>
+        </div>
+
+        <div>
+          <div style="display:flex;justify-content:space-between;font-size:14px;color:var(--muted);margin-bottom:4px;">
+            <span>Persönlich / nahbar</span><span>Professionell / distanziert</span>
+          </div>
+          <div class="slider-wrap">
+            <input type="range" min="0" max="10" value="5" name="w5_ton3" oninput="this.nextElementSibling.textContent=this.value">
+            <span class="slider-val">5</span>
+          </div>
+        </div>
+
+        <div>
+          <div style="display:flex;justify-content:space-between;font-size:14px;color:var(--muted);margin-bottom:4px;">
+            <span>Österreichisch / regional</span><span>International / global</span>
+          </div>
+          <div class="slider-wrap">
+            <input type="range" min="0" max="10" value="5" name="w5_ton4" oninput="this.nextElementSibling.textContent=this.value">
+            <span class="slider-val">5</span>
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+    <!-- W.6 Referenz-Website -->
+    <div class="field">
+      <label>W.6 · Welche Website findest du gut – und warum?</label>
+      <div class="field-note">Muss nichts mit Beratung oder Tech zu tun haben. Einfach eine Website, bei der du dir denkst: so soll Tragwerk wirken. URL oder Firmenname genügt.</div>
+      <textarea name="w6_referenz" placeholder="z.B. stripe.com – weil es technisch wirkt und trotzdem sofort verständlich ist ..." rows="3"></textarea>
+    </div>
+
+    <!-- W.7 Was darf nicht fehlen -->
+    <div class="field">
+      <label>W.7 · Was darf auf der Website auf keinen Fall fehlen?</label>
+      <textarea name="w7_must_have" placeholder="Inhalt, Funktion, Gefühl – was auch immer dir wichtig ist." rows="3" required></textarea>
+    </div>
+
+  </div>
+
+  <!-- SUBMIT -->
+  <div class="submit-area">
+    <p>Deine Antworten gehen direkt an Matthias Lechner und werden ausschließlich intern verwendet.</p>
+    <button type="submit">Antworten absenden →</button>
+    <div id="success-msg">Danke – deine Antworten sind angekommen.</div>
+  </div>
+
+</form>
+
+<footer>Tragwerk · Folgebefragung Runde 2 · Juni 2026 · Intern</footer>
+
+<script>
+  // Radio option highlight
+  document.querySelectorAll('.radio-option').forEach(opt => {
+    opt.addEventListener('click', () => {
+      const name = opt.querySelector('input').name;
+      document.querySelectorAll(`.radio-option input[name="${name}"]`).forEach(r => {
+        r.closest('.radio-option').classList.remove('selected');
+      });
+      opt.classList.add('selected');
+    });
+  });
+
+  // Form submit (Formspree AJAX)
+  document.getElementById('feedbackForm').addEventListener('submit', async function(e) {
+    e.preventDefault();
+    const btn = this.querySelector('button[type="submit"]');
+    btn.textContent = 'Wird gesendet …';
+    btn.disabled = true;
+    try {
+      const res = await fetch(this.action, {
+        method: 'POST',
+        body: new FormData(this),
+        headers: { 'Accept': 'application/json' }
+      });
+      if (res.ok) {
+        this.style.display = 'none';
+        document.getElementById('success-msg').style.display = 'block';
+      } else {
+        btn.textContent = 'Fehler – bitte erneut versuchen';
+        btn.disabled = false;
+      }
+    } catch {
+      btn.textContent = 'Fehler – bitte erneut versuchen';
+      btn.disabled = false;
+    }
+  });
+</script>
+</body>
+</html>
