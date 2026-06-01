@@ -1,0 +1,509 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Tragwerk · Auswertung Folgebefragung (Runde 2) · Juni 2026</title>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js"></script>
+<style>
+  :root{
+    --bg:#0f0f0f; --surface:#1a1a1a; --surface2:#242424; --border:#2e2e2e;
+    --accent:#e8d5a3; --accent2:#7eb8a4; --text:#e8e8e8; --muted:#888;
+    --g:#3a8a6e; --m:#5b7ec4; --s:#c47f5e;
+    --ok:#3a8a6e; --warn:#c9a23a; --risk:#c4564e;
+  }
+  *{box-sizing:border-box;margin:0;padding:0;}
+  body{font-family:'Helvetica Neue',Arial,sans-serif;background:var(--bg);color:var(--text);line-height:1.6;}
+
+  header{border-bottom:1px solid var(--border);padding:48px 60px 36px;}
+  .eyebrow{font-size:11px;letter-spacing:2px;text-transform:uppercase;color:var(--muted);margin-bottom:12px;}
+  header h1{font-size:32px;font-weight:300;letter-spacing:-0.5px;color:var(--accent);}
+  header p{margin-top:8px;color:var(--muted);font-size:14px;}
+  .respondent-pills{display:flex;gap:10px;margin-top:20px;flex-wrap:wrap;}
+  .pill{font-size:12px;padding:5px 14px;border-radius:20px;font-weight:500;}
+  .pill-g{background:rgba(58,138,110,.15);color:#6dc9a8;border:1px solid rgba(58,138,110,.3);}
+  .pill-m{background:rgba(91,126,196,.15);color:#8aaee8;border:1px solid rgba(91,126,196,.3);}
+  .pill-s{background:rgba(196,127,94,.15);color:#e8a07a;border:1px solid rgba(196,127,94,.3);}
+
+  main{max-width:1100px;margin:0 auto;padding:0 60px 80px;}
+  section{margin-top:60px;}
+  .section-label{font-size:10px;letter-spacing:3px;text-transform:uppercase;color:var(--muted);margin-bottom:24px;padding-bottom:10px;border-bottom:1px solid var(--border);}
+  h2{font-size:22px;font-weight:400;margin-bottom:6px;color:var(--text);}
+  h3{font-size:14px;font-weight:600;color:var(--muted);text-transform:uppercase;letter-spacing:1px;margin-bottom:16px;margin-top:32px;}
+
+  .grid-2{display:grid;grid-template-columns:1fr 1fr;gap:20px;}
+  .grid-3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:20px;}
+
+  .card{background:var(--surface);border:1px solid var(--border);border-radius:8px;padding:24px;}
+  .card-title{font-size:11px;text-transform:uppercase;letter-spacing:1.5px;color:var(--muted);margin-bottom:16px;}
+
+  .chart-wrap{position:relative;height:240px;}
+  .chart-wrap-sm{position:relative;height:200px;}
+
+  .quote-block{background:var(--surface);border:1px solid var(--border);border-radius:8px;padding:18px 22px;margin-bottom:12px;border-left:3px solid var(--border);}
+  .quote-block.g{border-left-color:var(--g);}
+  .quote-block.m{border-left-color:var(--m);}
+  .quote-block.s{border-left-color:var(--s);}
+  .quote-author{font-size:11px;font-weight:600;text-transform:uppercase;letter-spacing:1px;margin-bottom:8px;}
+  .quote-author.g{color:#6dc9a8;} .quote-author.m{color:#8aaee8;} .quote-author.s{color:#e8a07a;}
+  .quote-text{font-size:14px;color:var(--text);line-height:1.65;}
+  .quote-text em{color:var(--muted);font-style:normal;}
+
+  .tags{display:flex;flex-wrap:wrap;gap:8px;margin-top:8px;}
+  .tag{font-size:12px;padding:4px 12px;border-radius:4px;background:var(--surface2);border:1px solid var(--border);color:var(--text);}
+  .tag.c3{background:rgba(232,213,163,.15);border-color:rgba(232,213,163,.4);color:var(--accent);font-weight:600;}
+  .tag.c2{background:rgba(126,184,164,.1);border-color:rgba(126,184,164,.3);color:#9dd4be;}
+
+  .matrix{width:100%;border-collapse:collapse;font-size:13px;}
+  .matrix th{text-align:left;padding:10px 14px;background:var(--surface2);color:var(--muted);font-weight:500;font-size:11px;text-transform:uppercase;letter-spacing:1px;border-bottom:1px solid var(--border);}
+  .matrix td{padding:12px 14px;border-bottom:1px solid var(--border);vertical-align:top;color:var(--text);line-height:1.5;}
+  .matrix tr:last-child td{border-bottom:none;}
+  .dot-g{color:#6dc9a8;font-weight:700;} .dot-m{color:#8aaee8;font-weight:700;} .dot-s{color:#e8a07a;font-weight:700;}
+
+  .conclusion{background:var(--surface);border:1px solid var(--border);border-radius:8px;padding:26px 30px;margin-top:16px;}
+  .conclusion h4{font-size:13px;text-transform:uppercase;letter-spacing:1.5px;color:var(--accent);margin-bottom:12px;}
+  .conclusion p,.conclusion li{font-size:14px;color:#ccc;line-height:1.7;}
+  .conclusion ul{padding-left:18px;margin-top:8px;} .conclusion li{margin-bottom:8px;}
+
+  .alert{border-radius:8px;padding:18px 22px;margin-top:16px;}
+  .alert.ok{background:rgba(58,138,110,.08);border:1px solid rgba(58,138,110,.3);}
+  .alert.warn{background:rgba(201,162,58,.08);border:1px solid rgba(201,162,58,.3);}
+  .alert.risk{background:rgba(196,86,78,.09);border:1px solid rgba(196,86,78,.35);}
+  .alert p{font-size:14px;line-height:1.65;}
+  .alert.ok p{color:#9dd4be;} .alert.warn p{color:#dcc684;} .alert.risk p{color:#e89a92;}
+  .alert strong{color:#fff;}
+
+  /* status badges */
+  .status{display:inline-block;font-size:10px;font-weight:700;letter-spacing:1px;text-transform:uppercase;padding:3px 9px;border-radius:4px;vertical-align:middle;margin-left:8px;}
+  .st-ok{background:rgba(58,138,110,.2);color:#6dc9a8;border:1px solid rgba(58,138,110,.4);}
+  .st-part{background:rgba(201,162,58,.18);color:#dcc684;border:1px solid rgba(201,162,58,.4);}
+  .st-open{background:rgba(196,86,78,.18);color:#e89a92;border:1px solid rgba(196,86,78,.4);}
+
+  /* gap closure */
+  .gaprow{display:grid;grid-template-columns:34px 1fr;gap:16px;align-items:start;padding:18px 0;border-bottom:1px solid var(--border);}
+  .gaprow:last-child{border-bottom:none;}
+  .gapnum{font-size:26px;font-weight:200;color:var(--accent);line-height:1;}
+  .gaprow h5{font-size:15px;font-weight:600;color:var(--text);margin-bottom:6px;}
+  .gaprow p{font-size:13.5px;color:#bbb;line-height:1.6;}
+
+  /* score bars */
+  .score-row{display:flex;align-items:center;gap:12px;margin-bottom:10px;}
+  .score-name{font-size:13px;width:90px;flex-shrink:0;}
+  .score-bar-track{flex:1;background:var(--surface2);border-radius:4px;height:8px;overflow:hidden;}
+  .score-bar-fill{height:100%;border-radius:4px;}
+  .score-val{font-size:13px;font-weight:700;width:34px;text-align:right;color:var(--accent);}
+
+  .reflist a{color:var(--accent2);text-decoration:none;border-bottom:1px solid rgba(126,184,164,.3);}
+  .reflist a:hover{border-bottom-color:var(--accent2);}
+
+  .verdict{background:linear-gradient(135deg,rgba(58,138,110,.12),rgba(232,213,163,.06));border:1px solid rgba(58,138,110,.35);border-radius:10px;padding:32px 36px;}
+  .verdict h4{font-size:13px;text-transform:uppercase;letter-spacing:1.5px;color:#6dc9a8;margin-bottom:14px;}
+  .verdict p{font-size:15px;color:#e0e0e0;line-height:1.8;margin-bottom:12px;}
+  .verdict p:last-child{margin-bottom:0;}
+  .verdict .q{font-size:14px;color:var(--accent);font-weight:600;margin-top:18px;margin-bottom:4px;}
+
+  hr{border:none;border-top:1px solid var(--border);margin:40px 0;}
+  footer{border-top:1px solid var(--border);padding:24px 60px;font-size:12px;color:var(--muted);display:flex;justify-content:space-between;}
+  .legendline{font-size:12px;color:var(--muted);margin-top:10px;}
+
+  @media (max-width:760px){
+    header,main{padding-left:20px;padding-right:20px;}
+    .grid-2,.grid-3{grid-template-columns:1fr;}
+    footer{flex-direction:column;gap:8px;}
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="eyebrow">Tragwerk · Intern · Vertraulich · Runde 2</div>
+  <h1>Auswertung Folgebefragung</h1>
+  <p>3 Befragte · erhoben 31.05.–01.06.2026 · ausgewertet 01.06.2026</p>
+  <div class="respondent-pills">
+    <span class="pill pill-g">Günther Niederhofer · 31.05. 18:54</span>
+    <span class="pill pill-s">Matthias Sammer · 31.05. 14:26</span>
+    <span class="pill pill-m">Martin Wieser · 01.06. 19:24</span>
+  </div>
+</header>
+
+<main>
+
+  <!-- ─── MANAGEMENT SUMMARY ─── -->
+  <section id="summary">
+    <div class="section-label">Management Summary</div>
+    <div class="verdict">
+      <h4>Kernbefund in einem Satz</h4>
+      <p>Die Folgebefragung hat ihre Hauptaufgabe erfüllt: Die drei strategisch entscheidenden Lücken aus Runde&nbsp;1 — <strong>Wachstumspfad</strong>, <strong>Stellenwert der Transformationskompetenz</strong> und <strong>Website-Zielbild</strong> — sind heute deutlich klarer, in zwei von drei Fällen sogar konvergent. Damit ist die Faktenbasis für die <strong>Naming-Phase tragfähig</strong>. Ein einziger Punkt bleibt offen und betrifft das Screendesign, nicht das Naming: die präzise <strong>primäre Website-Zielgruppe</strong>.</p>
+      <p class="q">→ Können wir in die Naming-Phase gehen?</p>
+      <p><strong>Ja.</strong> Alle naming-relevanten Eingangsgrößen (Marktraum, Wachstumslogik, Tonalität, EN-Tauglichkeit, Trust-/Emotionsanspruch) sind beantwortet und stützen die Runde-1-Freigabe. Die offene Zielgruppen-Frage lässt sich in einem kurzen Abstimmungs-Call <em>parallel</em> zur Namensentwicklung klären — sie blockiert die Naming-Arbeit nicht.</p>
+    </div>
+
+    <div class="grid-3" style="margin-top:20px;">
+      <div class="card">
+        <div class="card-title">Lücke 1 · Wachstumspfad <span class="status st-ok">gelöst</span></div>
+        <p style="font-size:13.5px;color:#bbb;">DACH als Primärmarkt von allen dreien bestätigt (Runde 1 noch divergent: Tirol vs. DACH vs. Produkte). Wachstumslogik konvergiert auf <strong style="color:#e8d5a3;">Ventures + Netzwerk</strong> (je 3/3).</p>
+      </div>
+      <div class="card">
+        <div class="card-title">Lücke 2 · Transformation <span class="status st-part">geklärt m. Nuance</span></div>
+        <p style="font-size:13.5px;color:#bbb;">Als Kompetenz bejaht (2/3 „heute lieferbar"), in der Website-Hierarchie aber bewusst <strong style="color:#e8d5a3;">hinter Beratung &amp; Build</strong> eingeordnet. Benennen — nicht nach vorne stellen.</p>
+      </div>
+      <div class="card">
+        <div class="card-title">Lücke 3 · Website-Zielbild <span class="status st-part">überwiegend gelöst</span></div>
+        <p style="font-size:13.5px;color:#bbb;">Ziel einstimmig <strong style="color:#e8d5a3;">Glaubwürdigkeit</strong>, Must-have einstimmig <strong style="color:#e8d5a3;">Emotion + Vertrauen + Personen</strong>. Offen: präzise Zielgruppe (W.1) und Designpräferenzen (W.6).</p>
+      </div>
+    </div>
+  </section>
+
+  <hr>
+
+  <!-- ─── BLOCK S: STRATEGIE ─── -->
+  <section id="strategie">
+    <div class="section-label">S · Strategie &amp; Vision</div>
+
+    <!-- S.1 -->
+    <h3 style="margin-top:0;">S.1 · Primärmarkt der nächsten 24 Monate</h3>
+    <div class="grid-2">
+      <div class="card">
+        <div class="card-title">Antwort (Single Choice)</div>
+        <div class="score-row"><span class="score-name dot-g">Günther</span><div class="score-bar-track"><div class="score-bar-fill" style="width:100%;background:#3a8a6e;"></div></div><span class="score-val" style="font-size:11px;">DACH</span></div>
+        <div class="score-row"><span class="score-name dot-s">Matthias S.</span><div class="score-bar-track"><div class="score-bar-fill" style="width:100%;background:#c47f5e;"></div></div><span class="score-val" style="font-size:11px;">DACH</span></div>
+        <div class="score-row"><span class="score-name dot-m">Martin</span><div class="score-bar-track"><div class="score-bar-fill" style="width:100%;background:#5b7ec4;"></div></div><span class="score-val" style="font-size:11px;">DACH</span></div>
+        <p class="legendline"><strong style="color:#6dc9a8;">3/3 DACH</strong> — eindeutiger Konsens. Tirol/regional und „international von Anfang an" wurden von niemandem als Primärmarkt gewählt.</p>
+      </div>
+      <div class="card">
+        <div class="card-title">Aber: durchgängige Internationalisierungs-Klausel</div>
+        <div class="quote-block s" style="margin-bottom:8px;"><div class="quote-author s">Matthias S.</div><div class="quote-text">DACH als Kernmarkt, aber internationale Ausrichtung. D.&nbsp;h. auch eine englische Version der Website.</div></div>
+        <div class="quote-block m" style="margin-bottom:8px;"><div class="quote-author m">Martin</div><div class="quote-text">Gerne auch international wenn möglich, DACH kann schnell mal zu sehr limitieren.</div></div>
+        <p class="legendline">Günther: DACH ohne Zusatz. → Marktraum geklärt, aber mit klarem Auftrag zur EN-Skalierbarkeit.</p>
+      </div>
+    </div>
+
+    <!-- S.2 -->
+    <h3>S.2 · Transformationsberatung — Versprechen oder Aufbauziel?</h3>
+    <div class="grid-3">
+      <div class="quote-block g"><div class="quote-author g">Günther</div><div class="quote-text"><strong>Heute schon lieferbar</strong></div></div>
+      <div class="quote-block s"><div class="quote-author s">Matthias S.</div><div class="quote-text"><strong>Heute schon lieferbar</strong></div></div>
+      <div class="quote-block m"><div class="quote-author m">Martin</div><div class="quote-text"><strong>Bewusstes Aufbauziel</strong> (12–18 Monate)</div></div>
+    </div>
+    <div class="alert warn"><p><strong>2:1.</strong> Günther und Matthias S. sehen Transformation als heute schon verfügbar — auffällig, weil Günther in Runde&nbsp;1 noch die Transformations-<em>Lücke</em> als wichtigsten ungesagten Punkt benannt hatte. Martin ist vorsichtiger und rahmt sie als Aufbauziel. Aufgelöst wird der Unterschied durch die Leistungshierarchie (W.3): Transformation wird benannt, aber nicht nach vorn gestellt.</p></div>
+
+    <!-- S.3 -->
+    <h3>S.3 · Wachstumslogik (Mehrfachauswahl)</h3>
+    <div class="grid-2">
+      <div class="card"><div class="card-title">Nennungen pro Wachstumshebel (max. 3)</div><div class="chart-wrap"><canvas id="wachstumChart"></canvas></div></div>
+      <div class="card">
+        <div class="card-title">Lesart</div>
+        <p style="font-size:13.5px;color:#ccc;line-height:1.7;"><strong style="color:#6dc9a8;">Einstimmig (3/3):</strong> Ventures &amp; Beteiligungen aus Mandaten heraus + systematischer Netzwerkausbau.<br><br>
+        <strong style="color:#9dd4be;">Mehrheit (2/3):</strong> Eigene skalierbare Produkte/Software (Sammer, Wieser).<br><br>
+        <strong style="color:#888;">Einzeln:</strong> „Mehr/größere Mandate" nur Günther; „Team aufbauen" von niemandem.</p>
+        <p class="legendline">Günther-Kommentar: „1. und 5. Punkt ist primär" (Mandate skalieren + Netzwerk).</p>
+      </div>
+    </div>
+    <div class="alert ok"><p><strong>Echte Konvergenz gegenüber Runde&nbsp;1.</strong> Dort standen drei unvereinbare Wachstumslogiken nebeneinander (Tirol-Dominanz / Produkt-Skalierung / DACH-Expansion). Jetzt zeichnet sich ein gemeinsames Bild ab: <strong>DACH-Markt, Wachstum über Ventures, Netzwerk und eigene Produkte</strong> — nicht über klassisches Personal-/Mandatswachstum. Das ist die strategisch wichtigste Klärung dieser Runde.</p></div>
+
+    <!-- S.4 -->
+    <h3>S.4 · Commitment-Trigger</h3>
+    <div class="grid-3">
+      <div class="quote-block g"><div class="quote-author g">Günther</div><div class="quote-text">1–2 gemeinsame Projekte, in denen <strong>alle Kompetenzen</strong> zusammen angewandt wurden.</div></div>
+      <div class="quote-block s"><div class="quote-author s">Matthias S.</div><div class="quote-text">Path to Market und Product-Market-Fit müssen klar sein. Entsprechende <strong>Salespipeline</strong> und vor allem <strong>Cash Flow</strong>.</div></div>
+      <div class="quote-block m"><div class="quote-author m">Martin</div><div class="quote-text">Es muss sich <strong>tragen und finanziell Sinn machen</strong>.</div></div>
+    </div>
+
+    <div class="conclusion">
+      <h4>Schlussfolgerung Strategie</h4>
+      <ul>
+        <li><strong>Marktraum geklärt:</strong> DACH primär, EN-Version fest eingeplant. Das bestätigt die bisherige Einschätzung (DACH-Fokus, Deutsch primär / Englisch als zweite Sprache) und macht <em>internationale Aussprechbarkeit</em> zu einem harten Naming-Kriterium statt einer Option.</li>
+        <li><strong>Wachstum konvergiert:</strong> Ventures + Netzwerk + Produkte. Die Marke muss <em>über reines Consulting/Build hinaus skalieren können</em> — ein Name, der zu eng an „Bauen/Engineering" hängt, würde die Ventures-/Produkt-Dimension einschnüren.</li>
+        <li><strong>Commitment bleibt bedingt:</strong> Alle drei knüpfen vollen Einsatz an finanzielle Tragfähigkeit bzw. das erste gemeinsame Projekt. Die Runde-1-Beobachtung „Team noch neu / asymmetrisches Commitment" besteht fort — die Marke darf selbstbewusst, aber nicht überversprechend auftreten.</li>
+      </ul>
+    </div>
+  </section>
+
+  <hr>
+
+  <!-- ─── BLOCK W: WEBSITE ─── -->
+  <section id="website">
+    <div class="section-label">W · Website &amp; Architektur</div>
+
+    <!-- W.1 -->
+    <h3 style="margin-top:0;">W.1 · Primäre Zielgruppe der Website <span class="status st-open">offen / Konflikt</span></h3>
+    <table class="matrix">
+      <thead><tr><th>Befragter</th><th>Auswahl</th><th>Kommentar</th></tr></thead>
+      <tbody>
+        <tr><td class="dot-g">Günther</td><td>CTO / CDO (Mittelstand)</td><td>„Den 3. Punkt (Innovations-/Transformationsverantwortliche in Konzernen) sehe ich auch wichtig."</td></tr>
+        <tr><td class="dot-s">Matthias S.</td><td>CEO / GF eines KMU</td><td><strong style="color:#e8a07a;">„CIO, CDO. KMU- und Mittelstandfokus weglassen."</strong> — Kommentar widerspricht der Auswahl.</td></tr>
+        <tr><td class="dot-m">Martin</td><td><em>keine Auswahl</em></td><td>„Unklar"</td></tr>
+      </tbody>
+    </table>
+    <div class="alert risk"><p><strong>Hier zeigen die Antworten in zwei Richtungen.</strong> Günther und — über seinen Kommentar — auch Matthias S. tendieren zu <strong>technischen Entscheidern (CTO/CDO/CIO)</strong> und Konzern-Transformationsrollen; bei Matthias S. weichen Auswahl (CEO/KMU) und Kommentar (CIO/CDO, „KMU-Fokus weglassen") voneinander ab. Martin hat den Punkt offengelassen („Unklar"). Das steht in Spannung zur bisherigen Positionierung, die den KMU-Inhaber (weniger technisch) als primäre Zielgruppe der Startseite vorgesehen hatte. <strong>Konsequenz:</strong> Vor dem Finalisieren der Informationsarchitektur muss geklärt werden, ob die Startseite den KMU-Inhaber oder den technischen Transformationsentscheider zuerst anspricht. Das betrifft Tonalität und Aufbau — die Naming-Arbeit kann parallel laufen.</p></div>
+
+    <!-- W.2 -->
+    <h3>W.2 · Der eine Satz nach 30 Sekunden</h3>
+    <div class="grid-3">
+      <div class="quote-block g"><div class="quote-author g">Günther</div><div class="quote-text">Tiefgreifende technologische Kompetenz mit strategischer, ganzheitlicher Umsetzungsexpertise. <em>„Die kennen sich technologisch aus und liefern rasch wirksame Ergebnisse."</em></div></div>
+      <div class="quote-block s"><div class="quote-author s">Matthias S.</div><div class="quote-text">…dass ich mit Tragwerk sicher ins neue Zeitalter des Wirtschaftens komme → Unsicherheiten navigieren, End-to-End-Betreuung: Probleme/Prozesse, Strategie, Lösung.</div></div>
+      <div class="quote-block m"><div class="quote-author m">Martin</div><div class="quote-text"><em>„Trust — die finde ich gut, das traue ich denen zu, mit denen riskier ich das."</em></div></div>
+    </div>
+    <p class="legendline">Drei Formulierungen, ein roter Faden: <strong style="color:#e8d5a3;">Kompetenz, die in wirksame Ergebnisse mündet — und der man vertraut.</strong> Trust/Glaubwürdigkeit ist der gemeinsame Nenner und deckt sich mit W.4 und W.7.</p>
+
+    <!-- W.3 -->
+    <h3>W.3 · Leistungshierarchie auf der Website</h3>
+    <div class="grid-2">
+      <div class="card"><div class="card-title">Konsens-Priorität (länger = weiter vorne)</div><div class="chart-wrap"><canvas id="hierarchieChart"></canvas></div></div>
+      <div class="card">
+        <div class="card-title">Einzelwertung (1 = Hauptleistung · 3 = Hintergrund)</div>
+        <table class="matrix">
+          <thead><tr><th>Leistung</th><th class="dot-g">G</th><th class="dot-s">S</th><th class="dot-m">M</th><th>Ø</th></tr></thead>
+          <tbody>
+            <tr><td>Technologieberatung &amp; Strategie</td><td>1</td><td>1</td><td>2</td><td><strong style="color:#e8d5a3;">1,3</strong></td></tr>
+            <tr><td>Umsetzung / Build</td><td>1</td><td>2</td><td>1</td><td><strong style="color:#e8d5a3;">1,3</strong></td></tr>
+            <tr><td>KI-Kompetenz</td><td>2</td><td>2</td><td>2</td><td>2,0</td></tr>
+            <tr><td>Transformationsbegleitung</td><td>3</td><td>2</td><td>2</td><td>2,3</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+    <div class="alert ok"><p><strong>Klare, fast deckungsgleiche Hierarchie:</strong> <strong>Beratung &amp; Build</strong> gehören gemeinsam nach vorne, <strong>KI-Kompetenz</strong> als wichtige Ergänzung, <strong>Transformation</strong> in die zweite Reihe. Das löst die S.2-Spannung sauber: Transformation ist Kompetenz, aber kein Schaufenster-Thema. Deckt sich exakt mit der empfohlenen Leistungslogik: KI-Readiness, KI-Layer-Architektur und Prototyping nach vorne, Transformationsbegleitung ergänzend.</p></div>
+
+    <!-- W.4 -->
+    <h3>W.4 · Primäres Ziel der Website</h3>
+    <div class="card" style="text-align:center;">
+      <div style="font-size:30px;font-weight:300;color:var(--accent);">Glaubwürdigkeit aufbauen</div>
+      <p class="legendline" style="margin-top:8px;"><strong style="color:#6dc9a8;">3/3 einstimmig.</strong> Niemand wählte „Leads generieren" oder „Talente/Partner anziehen". → Die Website ist eine <strong>Validierungs- und Vertrauensseite</strong>, keine Inbound-Sales-Maschine. Das bestätigt die bisherige Einschätzung vollständig.</p>
+    </div>
+
+    <!-- W.5 -->
+    <h3>W.5 · Tonalität</h3>
+    <div class="grid-2">
+      <div class="card"><div class="card-title">Mittelwert-Profil (0–10)</div><div class="chart-wrap"><canvas id="tonChart"></canvas></div></div>
+      <div class="card">
+        <div class="card-title">Ablesung</div>
+        <p style="font-size:13.5px;color:#ccc;line-height:1.75;">
+        <strong style="color:#e8d5a3;">Geschäftlich/strategisch</strong> (Ø 6,3) und <strong style="color:#e8d5a3;">international</strong> (Ø 6,7) sind die deutlichsten Tendenzen.<br><br>
+        <strong>Bodenständig ↔ visionär</strong> (Ø 5,3) und <strong>persönlich ↔ distanziert</strong> (Ø 5,0) liegen nahe der Mitte — mit Tendenz zu geerdet und nahbar (Martin zieht hier am stärksten ins Persönliche/Bodenständige).<br><br>
+        <em style="color:#888;">Größte Streuung bei „international" (Günther 5 ↔ Martin 8) und „visionär" (Martin 4 ↔ Sammer 7).</em></p>
+      </div>
+    </div>
+    <p class="legendline">Tonale Ziel-Signatur: <strong style="color:#e8d5a3;">senior &amp; strategisch, international tragfähig — aber persönlich, nahbar und geerdet im Auftritt.</strong> Kein kühler Tech-Ton, keine Werbe-Vision.</p>
+
+    <!-- W.6 -->
+    <h3>W.6 · Referenz-Websites <span class="status st-open">noch offen</span></h3>
+    <p style="font-size:13.5px;color:#bbb;margin-bottom:14px;">Dieser Punkt ist noch offen: Bislang hat erst Günther diese Frage beantwortet (Referenzen per WhatsApp nachgereicht). Wir kennen damit seine persönlichen Präferenzen, aber noch nicht die von Martin Wieser und Matthias Sammer — und damit noch kein gemeinsames Bild. Die folgenden fünf Beispiele liefern eine erste, vorläufige Design-DNA:</p>
+    <table class="matrix reflist">
+      <thead><tr><th>Referenz</th><th>Was Günther daran schätzt</th></tr></thead>
+      <tbody>
+        <tr><td><a href="https://www.aesop.com/">aesop.com</a></td><td>Farbgebung — <strong>sandfarben, warm, nicht aggressiv</strong>.</td></tr>
+        <tr><td><a href="https://www.mckinsey.com/capabilities/quantumblack/our-insights">McKinsey · QuantumBlack</a></td><td>„Weißer Rahmen" / Luft — wirkt nicht so „frontal", keine zu großen Fonts und Überschriften.</td></tr>
+        <tr><td><a href="https://www.bcg.com/x">BCG X</a></td><td>Wirkt <strong>moderner als McKinsey</strong>.</td></tr>
+        <tr><td><a href="https://createfuture.com/">createfuture.com</a></td><td>Web-Struktur und v.&nbsp;a. die <strong>Testimonials</strong>; stärker „Build"-orientiert.</td></tr>
+        <tr><td><a href="https://roover.de/">roover.de</a></td><td>Design gefällt, aber: KI-Berater-Wettbewerber, „mit Midjourney erstellt", eher aus der Consulting-Ecke (wenig „Build").</td></tr>
+      </tbody>
+    </table>
+    <div class="alert warn"><p><strong>Status: noch offen.</strong> Die hier abgeleitete Design-DNA — warme, sandfarbene Palette · großzügiger Weißraum statt „frontaler" Wucht · modern, aber nicht laut · echte Testimonials als Trust-Layer · Zusatzwunsch „Clickable Workflow" für Service-Architektur und Packages mit echten Visuals — beruht bislang auf einer einzigen Rückmeldung und ist daher vorläufig. <strong>Nächster Schritt:</strong> Präferenzen von Martin und Matthias S. nachträglich einholen — oder durch zwei ausgearbeitete Designrichtungen zur Auswahl ersetzen.</p></div>
+
+    <!-- W.7 -->
+    <h3>W.7 · Was darf auf keinen Fall fehlen</h3>
+    <div class="grid-3">
+      <div class="quote-block g"><div class="quote-author g">Günther</div><div class="quote-text">Infos über uns <strong>als Person und Experte</strong> — und was uns antreibt.</div></div>
+      <div class="quote-block s"><div class="quote-author s">Matthias S.</div><div class="quote-text"><strong>Emotionen.</strong></div></div>
+      <div class="quote-block m"><div class="quote-author m">Martin</div><div class="quote-text"><strong>Emotion und Vertrauen.</strong></div></div>
+    </div>
+    <div class="alert ok"><p><strong>Bemerkenswert einstimmig:</strong> Emotion, Vertrauen und die Personen dahinter. Das bestätigt den ausdrücklichen Anspruch an den Relaunch — „bedeutend emotionaler, weniger textlastig" — <em>aus dem Mund der Gründer selbst</em>.</p></div>
+
+    <div class="conclusion">
+      <h4>Schlussfolgerung Website</h4>
+      <ul>
+        <li><strong>Funktion geklärt:</strong> Glaubwürdigkeit + Emotion + Vertrauen + Personen — eine Validierungsseite, keine Lead-Maschine. Einstimmig.</li>
+        <li><strong>Hierarchie geklärt:</strong> Beratung &amp; Build vorne, KI als Ergänzung, Transformation in zweiter Reihe.</li>
+        <li><strong>Tonalität geklärt:</strong> senior/strategisch &amp; international, aber persönlich und geerdet.</li>
+        <li><strong>Gestaltungsrichtung (vorläufig):</strong> warm/sandfarben, viel Weißraum, modern, Testimonials, „Clickable Workflow", echte Visuals — bislang nur durch eine Rückmeldung gestützt, daher noch zu validieren.</li>
+        <li><strong>Offene Punkte:</strong> (1) präzise Primärzielgruppe (KMU-Inhaber vs. technischer Entscheider) — vor IA-Finalisierung zu klären; (2) Design-/Referenzpräferenzen (W.6) von Martin und Matthias S. — nachzuholen oder über zwei NFBrands.X-Vorschläge zu definieren.</li>
+      </ul>
+    </div>
+  </section>
+
+  <hr>
+
+  <!-- ─── SYNTHESE RUNDE 1 → RUNDE 2 ─── -->
+  <section id="synthese">
+    <div class="section-label">Synthese · Runde 1 → Runde 2</div>
+    <h2>Was die zweite Runde an den offenen Punkten bewegt hat</h2>
+    <div class="card" style="margin-top:18px;">
+      <div class="gaprow">
+        <div class="gapnum">1</div>
+        <div>
+          <h5>Visions-/Wachstums-Gap <span class="status st-ok">geschlossen</span></h5>
+          <p>Runde 1: drei unvereinbare Logiken (Günther → Tirol-Dominanz, Martin → Produkt-/Investment-Skalierung, Sammer → DACH + int. Expansion). Runde 2: <strong>einstimmig DACH-Markt</strong>, Wachstum über <strong>Ventures + Netzwerk (3/3) + Produkte (2/3)</strong>. Günther ist von „Tirol" auf „DACH" gewandert — die spürbarste Bewegung.</p>
+        </div>
+      </div>
+      <div class="gaprow">
+        <div class="gapnum">2</div>
+        <div>
+          <h5>Transformations-Stellenwert <span class="status st-part">geklärt mit Nuance</span></h5>
+          <p>Runde 1: Günthers Hinweis, Tragwerk dürfe nicht nur als Builder gelten. Runde 2: Kompetenz bejaht (2/3 „heute lieferbar"), aber in der Website-Hierarchie bewusst <strong>hinter Beratung &amp; Build</strong>. Die Positionierung wird sie benennen, ohne sie zum Schaufenster-Thema zu machen.</p>
+        </div>
+      </div>
+      <div class="gaprow">
+        <div class="gapnum">3</div>
+        <div>
+          <h5>Website-Zielbild <span class="status st-part">überwiegend geschlossen</span></h5>
+          <p>Ziel (Glaubwürdigkeit) und Must-have (Emotion/Vertrauen/Personen) sind einstimmig, Hierarchie und Ton geklärt. <strong>Rest-Lücken:</strong> die präzise Primärzielgruppe (W.1, widersprüchlich bzw. offen beantwortet) sowie die Design-/Referenzpräferenzen (W.6), zu denen erst eine Rückmeldung vorliegt.</p>
+        </div>
+      </div>
+      <div class="gaprow">
+        <div class="gapnum">✓</div>
+        <div>
+          <h5>Bestätigt geblieben aus Runde 1</h5>
+          <p>Null emotionale Bindung an „Tragwerk", maximale Offenheit für einen neuen Namen, Konsens-No-Gos (KI/AI- und Bau-Begriffe im Namen), Naming-Territorien (Mathematik/Logik, Englisch/international, Architektur/Struktur). Nichts in Runde 2 widerspricht der Naming-Freigabe — die Eingangsgrößen sind nun zusätzlich geschärft.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <hr>
+
+  <!-- ─── IMPLIKATIONEN NAMING ─── -->
+  <section id="naming">
+    <div class="section-label">Implikationen für die Naming-Phase</div>
+    <h2>Was Runde 2 für die Namensentwicklung präzisiert</h2>
+    <div class="grid-2" style="margin-top:18px;">
+      <div class="conclusion">
+        <h4>Verschärfte Kriterien</h4>
+        <ul>
+          <li><strong>EN-Tauglichkeit ist Pflicht, nicht Kür:</strong> DACH primär + fest geplante EN-Version + Internationalisierungsklausel → der Name muss in DE und EN aussprechbar und unbelastet sein.</li>
+          <li><strong>Skalierbarkeit über Consulting/Build hinaus:</strong> Wachstum über Ventures, Netzwerk und Produkte → der Name darf das Angebot nicht auf „bauen/engineering" verengen. Argument <em>gegen</em> das (ohnehin als No-Go markierte) Bau-Territorium, <em>für</em> abstrakte/mathematisch-logische bzw. tragfähige Kunstwort-Territorien.</li>
+          <li><strong>Trust &amp; Wärme statt kühler Tech-Ton:</strong> Ziel = Glaubwürdigkeit, Must-have = Emotion/Vertrauen → der Name soll seriös und vertrauenswürdig wirken und eine personengetragene, nahbare Marke stützen.</li>
+          <li><strong>Senior/strategisch, international portierbar:</strong> Tonprofil (geschäftlich, international, geerdet) → kein verspielter, kein rein technischer Name.</li>
+        </ul>
+      </div>
+      <div class="conclusion">
+        <h4>Bestätigte Leitplanken (aus Runde 1)</h4>
+        <ul>
+          <li><strong>Qualitätsmaßstab:</strong> kurz, prägnant, kein erklärungsbedürftiges Kunstgebilde, geerdet.</li>
+          <li><strong>Konsens-Territorien:</strong> Mathematik/Logik · Englisch/international · Architektur/Struktur.</li>
+          <li><strong>Harte No-Gos:</strong> KI/AI im Namen · direkte Bau-/Statik-Assoziation.</li>
+          <li><strong>Faktenlast „Tragwerk":</strong> mind. 6 aktive DACH-Anbieter (5 im Bauwesen), geografische Nahkollision in Tirol, knappe Domains — bestätigt die Notwendigkeit, Alternativen seriös zu entwickeln.</li>        </ul>
+      </div>
+    </div>
+    <div class="alert ok"><p><strong>Fazit Naming:</strong> Die Naming-relevante Faktenbasis ist nicht nur vollständig, sondern durch Runde 2 belastbarer geworden. Es spricht nichts dagegen, jetzt in die strukturierte Erarbeitung von Namens-Territorien und konkreten Alternativen einzusteigen — und „Tragwerk" entlang der vereinbarten Kriterien (strategische Passung, Differenzierung, Merkfähigkeit, DE/EN-Aussprechbarkeit, Skalierbarkeit, Domain-Verfügbarkeit .com/.at, tonale Passung) ehrlich gegen die Alternativen zu bewerten.</p></div>
+  </section>
+
+  <hr>
+
+  <!-- ─── IMPLIKATIONEN SCREENDESIGN ─── -->
+  <section id="screendesign">
+    <div class="section-label">Implikationen für das Screendesign</div>
+    <div class="grid-2">
+      <div class="conclusion">
+        <h4>Bereits tragfähig</h4>
+        <ul>
+          <li><strong>Funktion:</strong> Validierungs-/Vertrauensseite (Glaubwürdigkeit), nicht Lead-Maschine.</li>
+          <li><strong>Leistungshierarchie:</strong> Beratung &amp; Build oben, KI als Ergänzung, Transformation zweite Reihe.</li>
+          <li><strong>Emotionaler Kern:</strong> Personen, Antrieb, „was uns antreibt", echte Visuals und Testimonials.</li>
+          <li><strong>Gestaltung (erste Richtung):</strong> warm/sandfarben, viel Weißraum, modern, „Clickable Workflow" für Architektur &amp; Packages — vorläufig, da Designpräferenzen erst teilweise vorliegen.</li>
+          <li><strong>Ton:</strong> senior/strategisch, international, persönlich-geerdet.</li>
+        </ul>
+      </div>
+      <div class="conclusion">
+        <h4>Vor IA-Finalisierung zu klären</h4>
+        <ul>
+          <li><strong>Primärzielgruppe der Startseite:</strong> KMU-Inhaber (weniger technisch) <em>oder</em> technischer Entscheider (CTO/CDO/CIO)? Günther und Sammers Kommentar tendieren zum technischen Entscheider, die bisherige Positionierung setzt den KMU-Inhaber. Martin: „Unklar".</li>
+          <li><strong>Wirkung auf Aufbau &amp; Sprache:</strong> Die Zielgruppen-Entscheidung bestimmt Reihenfolge der Eingangs-Sektionen, Beispiel-Cases und Tonhöhe der Texte. Sie ist <em>nicht</em> naming-blockierend, aber screendesign-blockierend für die oberste Ebene.</li>
+          <li><strong>Gemeinsame Designpräferenzen (W.6):</strong> Referenzen von Martin und Matthias S. nachholen — oder zwei NFBrands.X-Designrichtungen zur Auswahl vorlegen.</li>
+        </ul>
+      </div>
+    </div>
+  </section>
+
+  <hr>
+
+  <!-- ─── OFFENE PUNKTE & ANNAHMEN ─── -->
+  <section id="offen">
+    <div class="section-label">Offene Punkte, Annahmen &amp; Datenqualität</div>
+    <table class="matrix">
+      <thead><tr><th>Punkt</th><th>Status</th><th>Einordnung (Beleg vs. Annahme)</th></tr></thead>
+      <tbody>
+        <tr><td>Primäre Website-Zielgruppe (W.1)</td><td><span class="status st-open">offen</span></td><td><strong>Beleg:</strong> widersprüchliche Antworten, Martin offen. Vor Screendesign-IA in kurzem Call zu entscheiden.</td></tr>
+        <tr><td>„Heute lieferbar vs. Aufbau" (Transformation)</td><td><span class="status st-part">geklärt</span></td><td><strong>Beleg:</strong> 2:1; durch Hierarchie-Konsens praktisch aufgelöst (zweite Reihe).</td></tr>
+        <tr><td>Design-/Referenzpräferenzen (W.6)</td><td><span class="status st-open">offen</span></td><td>Bislang nur eine Rückmeldung. Präferenzen von Martin &amp; Matthias S. nachzuholen — oder durch zwei NFBrands.X-Designvorschläge zur Auswahl zu ersetzen. Abgeleitete Design-DNA bis dahin vorläufig.</td></tr>
+        <tr><td>Internationalisierungs-Zeitpunkt</td><td><span class="status st-part">Annahme</span></td><td><strong>Annahme:</strong> EN-Version als zweiter Schritt geplant; Runde 2 bestätigt den Bedarf, nicht das Timing.</td></tr>
+        <tr><td>Markenrechtliche Prüfung „Tragwerk" / Alternativen</td><td><span class="status st-open">extern</span></td><td><strong>Beleg:</strong> bleibt anwaltlicher Folgeschritt außerhalb des NFBrands.X-Mandats. Naming-Hinweise sind keine Rechtsberatung.</td></tr>
+        <tr><td>Antworttiefe einzelner Felder</td><td><span class="status st-part">Hinweis</span></td><td>Einzelne Felder offen oder knapp (v.a. W.1 und W.6). Die strategisch entscheidenden Felder (Markt, Wachstum, Ziel, Ton, Must-have) sind durchgängig verwertbar beantwortet.</td></tr>
+      </tbody>
+    </table>
+  </section>
+
+  <hr>
+
+  <!-- ─── EMPFEHLUNG ─── -->
+  <section id="empfehlung">
+    <div class="section-label">Reifegrad &amp; Empfehlung</div>
+    <div class="verdict">
+      <h4>Reifegrad &amp; Empfehlung an euch</h4>
+
+      <p>Eure Antworten aus Runde 2 sind vollständig ausgewertet und gegen Runde 1 gespiegelt. Daraus ergibt sich der folgende Reifegrad — und unsere Empfehlung für den nächsten Schritt.</p>
+
+      <p class="q">Reifegrad Naming</p>
+      <p><strong>Vollständig und geschärft.</strong> Marktraum, Wachstumslogik, Tonalität, EN-Tauglichkeit sowie der Trust- und Emotionsanspruch sind geklärt — mehrere davon einstimmig. Die Grundlage für die Namensentwicklung steht.</p>
+
+      <p class="q">Reifegrad Website / Screendesign</p>
+      <p><strong>Weitgehend tragfähig.</strong> Funktion (Glaubwürdigkeit), Leistungshierarchie und Ton sind klar, eine erste, vorläufige Gestaltungsrichtung liegt vor. Offen bleiben zwei Punkte: die präzise Primärzielgruppe der Startseite (W.1) und eure gemeinsamen Designpräferenzen (W.6, zu denen bislang erst eine Rückmeldung vorliegt).</p>
+
+      <p class="q">Unsere Empfehlung</p>
+      <p><strong>Mit der Namensentwicklung jetzt starten.</strong> Die offenen Punkte liegen im Screendesign, nicht im Naming — sie halten den Start also nicht auf. Konkret schlagen wir vor: die Namensentwicklung beginnen und <em>parallel</em> in einem kurzen gemeinsamen Call die Primärzielgruppe (KMU-Inhaber vs. technischer Entscheider) festlegen sowie die Designpräferenzen von Martin und Matthias S. einholen. Deren Ergebnis steuert anschließend das Screendesign der Startseite.</p>
+    </div>
+  </section>
+
+</main>
+
+<footer>
+  <span>Tragwerk · Auswertung Folgebefragung (Runde 2) · 01.06.2026 · Intern &amp; vertraulich</span>
+  <span>Erarbeitet von NFBrands.X</span>
+</footer>
+
+<script>
+const G='#3a8a6e', M='#5b7ec4', S='#c47f5e';
+const GA='rgba(58,138,110,.75)', MA='rgba(91,126,196,.75)', SA='rgba(196,127,94,.75)';
+Chart.defaults.color='#888';
+Chart.defaults.font.family="'Helvetica Neue',Arial,sans-serif";
+Chart.defaults.font.size=12;
+
+// S.3 Wachstum
+new Chart(document.getElementById('wachstumChart'),{
+  type:'bar',
+  data:{labels:['Ventures / Beteiligungen','Partnernetzwerk','Skalierbare Produkte','Mandate skalieren','Team aufbauen'],
+    datasets:[{label:'Nennungen',data:[3,3,2,1,0],
+      backgroundColor:['rgba(232,213,163,.8)','rgba(232,213,163,.8)','rgba(126,184,164,.6)','rgba(136,136,136,.45)','rgba(136,136,136,.25)'],
+      borderRadius:4,borderSkipped:false}]},
+  options:{indexAxis:'y',responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false}},
+    scales:{x:{grid:{color:'#2e2e2e'},ticks:{stepSize:1},max:3},y:{grid:{display:false},ticks:{font:{size:11}}}}}
+});
+
+// W.3 Hierarchie (strength = 4 - avg rank; höher = weiter vorne)
+new Chart(document.getElementById('hierarchieChart'),{
+  type:'bar',
+  data:{labels:['Beratung & Strategie','Umsetzung / Build','KI-Kompetenz','Transformation'],
+    datasets:[{label:'Priorität',data:[2.67,2.67,2.0,1.67],
+      backgroundColor:['rgba(232,213,163,.8)','rgba(232,213,163,.8)','rgba(126,184,164,.6)','rgba(136,136,136,.45)'],
+      borderRadius:4,borderSkipped:false}]},
+  options:{indexAxis:'y',responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false},
+    tooltip:{callbacks:{label:c=>'Ø-Rang '+(4-c.parsed.x).toFixed(1)+' (1=Hauptleistung)'}}},
+    scales:{x:{grid:{color:'#2e2e2e'},min:0,max:3,ticks:{display:false}},y:{grid:{display:false},ticks:{font:{size:11}}}}}
+});
+
+// W.5 Tonalität radar
+new Chart(document.getElementById('tonChart'),{
+  type:'radar',
+  data:{labels:['Visionär (vs. bodenständig)','Geschäftlich (vs. technisch)','Distanziert (vs. persönlich)','International (vs. regional)'],
+    datasets:[
+      {label:'Günther',data:[5,5,5,5],borderColor:G,backgroundColor:'rgba(58,138,110,.12)',pointBackgroundColor:G,borderWidth:2},
+      {label:'Matthias S.',data:[7,7,6,7],borderColor:S,backgroundColor:'rgba(196,127,94,.12)',pointBackgroundColor:S,borderWidth:2},
+      {label:'Martin',data:[4,7,4,8],borderColor:M,backgroundColor:'rgba(91,126,196,.12)',pointBackgroundColor:M,borderWidth:2}
+    ]},
+  options:{responsive:true,maintainAspectRatio:false,
+    plugins:{legend:{position:'bottom',labels:{font:{size:11},padding:8}}},
+    scales:{r:{grid:{color:'#2e2e2e'},angleLines:{color:'#2e2e2e'},pointLabels:{font:{size:10},color:'#aaa'},ticks:{display:false,stepSize:2},min:0,max:10}}}
+});
+</script>
+</body>
+</html>
