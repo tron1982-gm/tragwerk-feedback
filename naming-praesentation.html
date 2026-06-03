@@ -160,6 +160,25 @@ html,body{height:100%;width:100%;overflow:hidden;font-family:'Inter',sans-serif;
 .nfx-slogan{font-family:'Scandia','Inter',sans-serif;font-weight:400;font-size:16px;color:#FFF;margin-bottom:0;white-space:nowrap;letter-spacing:.015em;}
 .scandia-bold{font-family:'Scandia','Inter',sans-serif;font-weight:700;}
 
+/* Mobile page counter (replaces dots) */
+.mob-counter{display:none;font-family:'Space Mono',monospace;font-size:11px;color:var(--subtle);}
+
+/* ── MOBILE OVERRIDES (must be last to win over base grid styles) ── */
+@media(max-width:700px){
+  /* Grids → single column */
+  .details{grid-template-columns:1fr!important;gap:14px!important;}
+  .crit-grid{grid-template-columns:1fr!important;gap:12px!important;}
+  .var-grid{grid-template-columns:1fr!important;gap:20px!important;}
+  .cred-wrap{grid-template-columns:1fr!important;gap:20px!important;padding-top:20px!important;}
+  .exec-grid{grid-template-columns:1fr!important;gap:14px!important;}
+  /* Name slide: more breathing room around name */
+  .ns .name-big{margin-top:24px!important;margin-bottom:28px!important;}
+  .ns .name-origin{margin-bottom:24px!important;}
+  /* Replace dots with text counter */
+  .dots-row{display:none!important;}
+  .mob-counter{display:block;}
+}
+
 /* special slides */
 .intro-kicker{font-size:11px;font-weight:600;letter-spacing:.14em;text-transform:uppercase;color:var(--subtle);margin-bottom:20px;}
 .intro-title{font-family:'Playfair Display',serif;font-size:clamp(52px,7vw,100px);font-weight:700;line-height:.96;letter-spacing:-.025em;margin-bottom:26px;}
@@ -586,6 +605,7 @@ html,body{height:100%;width:100%;overflow:hidden;font-family:'Inter',sans-serif;
 <footer class="ftr">
   <button class="nav-btn" id="prevBtn" onclick="go(-1)" disabled>← Zurück</button>
   <div class="dots-row" id="dots"></div>
+  <span class="mob-counter" id="mob-counter">1 / 19</span>
   <button class="nav-btn" id="nextBtn" onclick="go(1)">Weiter →</button>
 </footer>
 
@@ -610,13 +630,16 @@ html,body{height:100%;width:100%;overflow:hidden;font-family:'Inter',sans-serif;
     const nb=document.getElementById('nextBtn');
     nb.textContent=cur===N-1?'↺ Von vorne →':'Weiter →';
     document.querySelectorAll('.dot').forEach((d,i)=>d.classList.toggle('active',i===cur));
+    const mc=document.getElementById('mob-counter');
+    if(mc)mc.textContent=(cur+1)+' / '+N;
   }
   function goTo(idx){
     if(idx===cur)return;
     const prev=cur;cur=idx;
+    slides[cur].scrollTop=0;
     slides[prev].classList.remove('active');
     slides[prev].classList.add('prev-out');
-    setTimeout(()=>slides[prev].classList.remove('prev-out'),480);
+    setTimeout(()=>{slides[prev].classList.remove('prev-out');slides[prev].scrollTop=0;},480);
     const dir=(idx===0&&prev===N-1)?1:(idx>prev?1:-1);
     slides[cur].style.transform='translateX('+(dir*48)+'px)';
     slides[cur].style.opacity='0';
