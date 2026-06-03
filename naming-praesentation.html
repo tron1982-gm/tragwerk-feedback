@@ -170,7 +170,7 @@ html,body{height:100%;width:100%;overflow:hidden;font-family:'Inter',sans-serif;
 /* ── MOBILE OVERRIDES (must be last to win over base grid styles) ── */
 @media(max-width:700px){
   /* Grids → single column */
-  .details{grid-template-columns:1fr!important;gap:14px!important;}
+  .details{grid-template-columns:1fr!important;gap:40px!important;}
   .crit-grid{grid-template-columns:1fr!important;gap:12px!important;}
   .var-grid{grid-template-columns:1fr!important;gap:20px!important;}
   .cred-wrap{grid-template-columns:1fr!important;gap:20px!important;padding-top:20px!important;}
@@ -183,6 +183,12 @@ html,body{height:100%;width:100%;overflow:hidden;font-family:'Inter',sans-serif;
   .mob-counter{display:block;}
   /* All slides top-aligned on mobile (prevents cut-off for long slides) */
   .slide{justify-content:flex-start!important;}
+  /* Exceptions: slides 1 + 4 stay vertically centered */
+  .slide-centered{justify-content:center!important;align-items:center!important;}
+  /* Divider between detail blocks on mobile */
+  .details .dblock{border-bottom:1px solid rgba(0,0,0,.08);padding-bottom:32px;}
+  .ns .details .dblock{border-bottom-color:rgba(0,0,0,.07);}
+  .details .dblock:last-child{border-bottom:none;padding-bottom:0;}
 }
 
 /* special slides */
@@ -246,7 +252,7 @@ html,body{height:100%;width:100%;overflow:hidden;font-family:'Inter',sans-serif;
 <div class="stage" id="stage">
 
 <!-- 01 INTRO -->
-<div class="slide slide-dark active">
+<div class="slide slide-dark slide-centered active">
   <div class="intro-kicker">Konsolidierte Naming-Analyse · NFBrands.X</div>
   <div class="intro-title">Ein neuer Name<br>für Tragwerk.</div>
   <div class="intro-sub">30 Kandidaten · vollständiger Domain-Check · Juni 2026</div>
@@ -323,7 +329,7 @@ html,body{height:100%;width:100%;overflow:hidden;font-family:'Inter',sans-serif;
 </div>
 
 <!-- 04 DIVIDER -->
-<div class="slide" style="justify-content:center;align-items:center;text-align:center">
+<div class="slide slide-centered" style="justify-content:center;align-items:center;text-align:center">
   <div class="name-big" style="font-size:clamp(56px,7.5vw,108px);color:var(--fg)">Die Ergebnisse&thinsp;…</div>
 </div>
 
