@@ -621,7 +621,7 @@ html,body{height:100%;width:100%;overflow:hidden;font-family:'Inter',sans-serif;
     slides[cur].style.transform='translateX('+(dir*48)+'px)';
     slides[cur].style.opacity='0';
     slides[cur].classList.add('active');
-    requestAnimationFrame(()=>requestAnimationFrame(()=>{slides[cur].style.transform='';slides[cur].style.opacity='';}));
+    requestAnimationFrame(()=>requestAnimationFrame(()=>{slides[cur].style.transform='';slides[cur].style.opacity='';if(cur===N-1)setTimeout(sizeSlogan,50);}));
     updateUI();
   }
   window.go=function(dir){if(dir===1&&cur===N-1)goTo(0);else goTo(cur+dir);};
@@ -641,14 +641,17 @@ html,body{height:100%;width:100%;overflow:hidden;font-family:'Inter',sans-serif;
     if(!logo||!slogan)return;
     const w=logo.getBoundingClientRect().width;
     if(!w)return;
-    slogan.style.fontSize='16px';
-    slogan.style.width='auto';
-    const tw=slogan.getBoundingClientRect().width;
-    slogan.style.width='';
+    // Measure natural text width using an off-screen clone
+    const clone=slogan.cloneNode(true);
+    clone.style.cssText='position:fixed;visibility:hidden;top:-9999px;left:-9999px;width:auto;white-space:nowrap;font-size:16px;';
+    document.body.appendChild(clone);
+    const tw=clone.getBoundingClientRect().width;
+    document.body.removeChild(clone);
     if(tw>0)slogan.style.fontSize=(16*w/tw)+'px';
   }
-  // Run after fonts are loaded and on resize
-  if(document.fonts){document.fonts.ready.then(sizeSlogan);}else{setTimeout(sizeSlogan,400);}
+  // Run after fonts loaded, on resize, and deferred fallback
+  const runSize=()=>{sizeSlogan();setTimeout(sizeSlogan,300);};
+  if(document.fonts){document.fonts.ready.then(runSize);}else{setTimeout(runSize,500);}
   window.addEventListener('resize',sizeSlogan);
 })();
 </script>
