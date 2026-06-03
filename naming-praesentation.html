@@ -84,11 +84,10 @@ html,body{height:100%;width:100%;overflow:hidden;font-family:'Inter',sans-serif;
 }
 
 /* two-tone name slides */
-.ns{background:var(--dark);justify-content:flex-start;padding-bottom:0;align-items:center;}
-/* Desktop: name + origin centered in dark area (auto margins split remaining space equally) */
-.ns .tier-row{margin-top:auto;justify-content:center;width:100%;}
-.ns .name-big{text-align:center;}
-.ns .name-origin{text-align:center;max-width:100%;}
+.ns{background:var(--dark);justify-content:flex-start;padding-bottom:0;}
+/* Desktop: name + origin centered in dark area — tier-row stays top-left */
+.ns .name-big{align-self:center;text-align:center;margin-top:auto;}
+.ns .name-origin{align-self:center;text-align:center;max-width:100%;}
 .ns .details{align-self:stretch;}
 .ns .name-big{color:#FFF;}
 .ns .name-origin{color:rgba(255,255,255,.55);}
@@ -191,9 +190,8 @@ html,body{height:100%;width:100%;overflow:hidden;font-family:'Inter',sans-serif;
   /* Exceptions: slides 1 + 4 stay vertically centered */
   .slide-centered{justify-content:center!important;align-items:center!important;}
   /* Undo desktop name centering on mobile */
-  .ns .tier-row{margin-top:0!important;justify-content:flex-start!important;}
-  .ns .name-big{text-align:left!important;}
-  .ns .name-origin{text-align:left!important;}
+  .ns .name-big{align-self:flex-start!important;text-align:left!important;}
+  .ns .name-origin{align-self:flex-start!important;text-align:left!important;}
 }
 
 /* special slides */
