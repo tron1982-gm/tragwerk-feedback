@@ -1,0 +1,548 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Tragwerk · Naming-Entscheidung 2026</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;1,400&family=Inter:wght@300;400;500;600&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+<style>
+
+*, *::before, *::after { box-sizing:border-box; margin:0; padding:0; }
+
+:root {
+  --bg:#F7F6F2; --fg:#1A1A18; --secondary:#6B6B65; --subtle:#AEADA7;
+  --line:#DDDBD5; --card:#EFEDE8; --dark:#1A1A18;
+  --t1:#0C3B2C; --t1-bg:#E6F2EC; --t2:#1A3553; --t2-bg:#E6EFF6;
+  --t3:#6B5220; --t3-bg:#F5EDDB; --tx:#8B1E1E; --tx-bg:#F8EAEA;
+  --df:#2A7A4A; --df-bg:#EAF5EE; --ds:#B56A0A; --ds-bg:#FDF3E3;
+  --dx:#C0392B; --dx-bg:#FCECEA; --do:#888880; --do-bg:#F0EFEA;
+}
+
+html,body{height:100%;width:100%;overflow:hidden;font-family:'Inter',sans-serif;background:var(--bg);color:var(--fg);-webkit-font-smoothing:antialiased;}
+
+.hdr{position:fixed;top:0;left:0;right:0;height:52px;display:flex;align-items:center;justify-content:space-between;padding:0 52px;background:var(--bg);border-bottom:1px solid var(--line);z-index:200;}
+.hdr-logo{font-size:11px;font-weight:600;letter-spacing:.14em;text-transform:uppercase;color:var(--secondary);}
+.hdr-count{font-family:'Space Mono',monospace;font-size:11px;color:var(--subtle);}
+.pbar{position:fixed;top:52px;left:0;height:2px;background:var(--fg);transition:width .45s cubic-bezier(.4,0,.2,1);z-index:200;}
+
+.stage{position:fixed;top:54px;left:0;right:0;bottom:60px;overflow:hidden;}
+
+.slide{position:absolute;inset:0;padding:40px 56px 36px;display:flex;flex-direction:column;justify-content:center;opacity:0;transform:translateX(48px);transition:opacity .45s ease,transform .45s ease;pointer-events:none;background:var(--bg);overflow-y:auto;}
+.slide.active{opacity:1;transform:translateX(0);pointer-events:all;}
+.slide.prev-out{opacity:0;transform:translateX(-48px);}
+
+/* two-tone name slides */
+.ns{background:var(--dark);justify-content:flex-start;padding-bottom:0;}
+.ns .name-big{color:#FFF;}
+.ns .name-origin{color:rgba(255,255,255,.55);}
+.ns .tier-sub{color:rgba(255,255,255,.3);}
+.ns .badge-t1{background:rgba(14,100,60,.4);color:#8DE0B0;}
+.ns .badge-t2{background:rgba(26,53,83,.4);color:#8DB8E0;}
+.ns .details{background:#FFF;margin:auto -56px 0 -56px;padding:26px 56px 36px;border-top:none;}
+.ns .dblock h4{font-size:10px;font-weight:600;letter-spacing:.13em;text-transform:uppercase;color:var(--subtle);margin-bottom:12px;}
+.ns .dblock p{font-size:13.5px;line-height:1.65;color:var(--secondary);}
+.ns .dblock strong{color:var(--fg);font-weight:500;}
+.ns .note-small{color:var(--subtle);font-size:11.5px;margin-top:8px;line-height:1.5;}
+.ns .db-f{background:var(--df-bg);color:var(--df);}.ns .db-f::before{background:var(--df);}
+.ns .db-s{background:var(--ds-bg);color:var(--ds);}.ns .db-s::before{background:var(--ds);}
+.ns .db-x{background:var(--dx-bg);color:var(--dx);}.ns .db-x::before{background:var(--dx);}
+.ns .db-o{background:var(--do-bg);color:var(--do);}.ns .db-o::before{background:var(--do);}
+.ns .coll-ok{background:var(--df-bg);color:#1B5E38;border-color:var(--df);}
+.ns .coll-mid{background:var(--ds-bg);color:#7A4E00;border-color:var(--ds);}
+.ns .coll-high{background:var(--dx-bg);color:#8B1E1E;border-color:var(--dx);}
+.ns .stars{color:var(--fg);}.ns .recc{color:var(--secondary);}.ns .recc strong{color:var(--fg);}
+
+.tier-row{display:flex;align-items:center;gap:14px;margin-bottom:16px;}
+.badge{display:inline-flex;align-items:center;padding:4px 11px;border-radius:4px;font-size:10px;font-weight:600;letter-spacing:.12em;text-transform:uppercase;}
+.badge-t1{background:var(--t1-bg);color:var(--t1);}
+.badge-t2{background:var(--t2-bg);color:var(--t2);}
+.badge-tx{background:var(--tx-bg);color:var(--tx);}
+.badge-neu{background:var(--card);color:var(--secondary);}
+.tier-sub{font-size:11px;letter-spacing:.08em;color:var(--subtle);text-transform:uppercase;}
+
+.name-big{font-family:'Playfair Display',serif;font-size:clamp(60px,10vw,144px);font-weight:700;line-height:.94;letter-spacing:-.025em;color:var(--fg);margin-bottom:18px;}
+.name-origin{font-family:'Playfair Display',serif;font-style:italic;font-size:16px;line-height:1.5;color:var(--secondary);max-width:680px;}
+
+.details{display:grid;grid-template-columns:1fr 1.2fr 1fr;gap:28px;border-top:1px solid var(--line);padding-top:26px;margin-top:28px;}
+.dblock h4{font-size:10px;font-weight:600;letter-spacing:.13em;text-transform:uppercase;color:var(--subtle);margin-bottom:12px;}
+.dblock p{font-size:13.5px;line-height:1.65;color:var(--secondary);}
+.dblock strong{color:var(--fg);font-weight:500;}
+.domain-row{display:flex;flex-wrap:wrap;gap:7px;}
+.db{font-family:'Space Mono',monospace;font-size:11px;padding:4px 9px;border-radius:4px;display:inline-flex;align-items:center;gap:5px;}
+.db::before{content:'';display:block;width:6px;height:6px;border-radius:50%;flex-shrink:0;}
+.db-f{background:var(--df-bg);color:var(--df);}.db-f::before{background:var(--df);}
+.db-s{background:var(--ds-bg);color:var(--ds);}.db-s::before{background:var(--ds);}
+.db-x{background:var(--dx-bg);color:var(--dx);}.db-x::before{background:var(--dx);}
+.db-o{background:var(--do-bg);color:var(--do);}.db-o::before{background:var(--do);}
+.coll{padding:10px 13px;border-radius:5px;font-size:13px;line-height:1.55;border-left:3px solid;}
+.coll-ok{background:var(--df-bg);color:#1B5E38;border-color:var(--df);}
+.coll-mid{background:var(--ds-bg);color:#7A4E00;border-color:var(--ds);}
+.coll-high{background:var(--dx-bg);color:#8B1E1E;border-color:var(--dx);}
+.stars{font-size:17px;letter-spacing:2px;margin-bottom:7px;}
+.recc{font-size:13.5px;line-height:1.6;color:var(--secondary);}
+.recc strong{color:var(--fg);}
+
+/* special slides */
+.intro-kicker{font-size:11px;font-weight:600;letter-spacing:.14em;text-transform:uppercase;color:var(--subtle);margin-bottom:20px;}
+.intro-title{font-family:'Playfair Display',serif;font-size:clamp(52px,7vw,100px);font-weight:700;line-height:.96;letter-spacing:-.025em;margin-bottom:26px;}
+.intro-sub{font-family:'Playfair Display',serif;font-style:italic;font-size:17px;color:var(--secondary);margin-bottom:40px;max-width:560px;line-height:1.5;}
+.intro-card{padding:18px 20px;background:var(--card);border-radius:6px;border-top:1px solid var(--line);padding-top:28px;}
+.intro-card h4{font-size:10px;font-weight:600;letter-spacing:.12em;text-transform:uppercase;color:var(--subtle);margin-bottom:10px;}
+.intro-card p{font-size:13px;line-height:1.6;color:var(--secondary);}
+.crit-grid{display:grid;grid-template-columns:1.1fr 1fr 1fr;gap:20px;border-top:1px solid var(--line);padding-top:28px;}
+.crit-block{padding:20px 22px;background:var(--card);border-radius:6px;}
+.crit-block h4{font-size:10px;font-weight:600;letter-spacing:.12em;text-transform:uppercase;color:var(--subtle);margin-bottom:14px;}
+.crit-item{display:flex;gap:10px;margin-bottom:10px;font-size:13px;line-height:1.55;color:var(--secondary);}
+.crit-item:last-child{margin-bottom:0;}
+.crit-dot{flex-shrink:0;width:6px;height:6px;border-radius:50%;margin-top:6px;}
+.crit-dot-ok{background:var(--df);}.crit-dot-no{background:var(--dx);}.crit-dot-n{background:var(--secondary);}
+.crit-item strong{color:var(--fg);font-weight:500;}
+.elim-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(160px,1fr));gap:9px;}
+.elim-card{padding:11px 13px;background:var(--tx-bg);border-left:3px solid var(--dx);border-radius:0 5px 5px 0;}
+.elim-card h5{font-family:'Playfair Display',serif;font-size:17px;font-weight:700;text-decoration:line-through;color:var(--tx);margin-bottom:3px;}
+.elim-card p{font-size:11px;line-height:1.45;color:#9B3333;}
+.rank-inner{overflow-y:auto;flex:1;padding-top:4px;}
+.rtable{width:100%;border-collapse:collapse;font-size:13.5px;}
+.rtable th{text-align:left;padding:0 11px 11px;font-size:10px;font-weight:600;letter-spacing:.12em;text-transform:uppercase;color:var(--subtle);border-bottom:2px solid var(--line);}
+.rtable td{padding:11px;border-bottom:1px solid var(--line);vertical-align:middle;}
+.rtable tr:last-child td{border-bottom:none;}
+.rtable tr:hover td{background:var(--card);}
+.rnum{font-family:'Space Mono',monospace;font-size:12px;color:var(--subtle);}
+.rname{font-family:'Playfair Display',serif;font-size:22px;font-weight:700;}
+.rstars{font-size:13px;letter-spacing:1px;}
+.rtip{font-size:11.5px;color:var(--secondary);line-height:1.5;}
+.rank-note{margin-top:18px;padding:14px 18px;background:var(--card);border-radius:6px;font-size:13px;color:var(--secondary);line-height:1.65;}
+.rank-note strong{color:var(--fg);}
+.var-grid{display:grid;grid-template-columns:1fr 1fr 1fr;gap:20px;border-top:1px solid var(--line);padding-top:24px;}
+.cred-wrap{display:grid;grid-template-columns:1.2fr 1fr;gap:48px;border-top:1px solid var(--line);padding-top:32px;margin-top:28px;}
+.cred-block h4{font-size:10px;font-weight:600;letter-spacing:.13em;text-transform:uppercase;color:var(--subtle);margin-bottom:16px;}
+.cred-row{display:flex;flex-direction:column;gap:6px;}
+.cred-row .cr{font-size:13.5px;line-height:1.5;color:var(--secondary);}
+.cred-row .cr strong{color:var(--fg);font-weight:500;}
+.cred-row .cr a{color:var(--fg);text-decoration:none;border-bottom:1px solid var(--line);}
+.legal-note{margin-top:28px;padding:16px 20px;background:var(--card);border-radius:6px;font-size:12px;line-height:1.7;color:var(--secondary);border-left:3px solid var(--line);}
+.legal-note strong{color:var(--fg);}
+
+.ftr{position:fixed;bottom:0;left:0;right:0;height:60px;display:flex;align-items:center;justify-content:space-between;padding:0 52px;background:var(--bg);border-top:1px solid var(--line);z-index:200;}
+.nav-btn{display:flex;align-items:center;gap:7px;background:none;border:1px solid var(--line);color:var(--fg);font-family:'Inter',sans-serif;font-size:12.5px;font-weight:500;padding:7px 18px;border-radius:5px;cursor:pointer;transition:all .18s;}
+.nav-btn:hover:not(:disabled){background:var(--fg);color:var(--bg);border-color:var(--fg);}
+.nav-btn:disabled{opacity:.3;cursor:default;}
+.dots-row{display:flex;gap:7px;align-items:center;}
+.dot{width:6px;height:6px;border-radius:3px;background:var(--line);cursor:pointer;transition:all .22s;}
+.dot.active{width:22px;background:var(--fg);}
+</style>
+</head>
+<body>
+
+<header class="hdr">
+  <span class="hdr-logo">Tragwerk · Naming 2026</span>
+  <span class="hdr-count" id="counter">01 / 19</span>
+</header>
+<div class="pbar" id="pbar"></div>
+
+<div class="stage" id="stage">
+
+<!-- 01 INTRO -->
+<div class="slide active">
+  <div class="intro-kicker">Konsolidierte Naming-Analyse · NFBrands.X</div>
+  <div class="intro-title">Ein neuer Name<br>für Tragwerk.</div>
+  <div class="intro-sub">30 Kandidaten · vollständiger Domain-Check · Juni 2026</div>
+  <div class="intro-card">
+    <h4>Bewertungskriterien</h4>
+    <p>Strategische Passung · Domain-Verfügbarkeit · Kollisionsrisiko · DE/EN-Aussprache · Skalierbarkeit · Markenschutzfähigkeit</p>
+  </div>
+</div>
+
+<!-- 02 EXECUTIVE SUMMARY -->
+<div class="slide">
+  <div class="tier-row" style="margin-bottom:18px"><span class="badge badge-neu">Executive Summary</span></div>
+  <div class="name-big" style="font-size:clamp(36px,4.5vw,62px);margin-bottom:10px;line-height:1.05">Warum ein neuer Name —<br>und wie kamen wir hierher?</div>
+  <div style="display:grid;grid-template-columns:1fr 1fr;gap:20px;margin-top:24px;border-top:1px solid var(--line);padding-top:24px;flex:1;align-content:start">
+    <div style="display:flex;flex-direction:column;gap:10px">
+      <h4 style="font-size:10px;font-weight:600;letter-spacing:.13em;text-transform:uppercase;color:var(--subtle)">Das Problem mit dem heutigen Namen</h4>
+      <div style="display:flex;gap:14px;align-items:flex-start;padding:14px 16px;background:var(--tx-bg);border-left:3px solid var(--dx);border-radius:0 5px 5px 0">
+        <div style="font-family:'Playfair Display',serif;font-size:28px;font-weight:700;color:var(--tx);line-height:1;flex-shrink:0">1</div>
+        <div><div style="font-size:13px;font-weight:600;color:var(--tx);margin-bottom:4px">Falsche Marktassoziation</div><div style="font-size:12.5px;line-height:1.6;color:#9B3333">»Tragwerk« ist ein etablierter Begriff aus Bauwesen und Statik — er weckt beim ersten Kontakt unweigerlich Bilder eines Marktes, den das Unternehmen nicht bedient.</div></div>
+      </div>
+      <div style="display:flex;gap:14px;align-items:flex-start;padding:14px 16px;background:var(--tx-bg);border-left:3px solid var(--dx);border-radius:0 5px 5px 0">
+        <div style="font-family:'Playfair Display',serif;font-size:28px;font-weight:700;color:var(--tx);line-height:1;flex-shrink:0">2</div>
+        <div><div style="font-size:13px;font-weight:600;color:var(--tx);margin-bottom:4px">Verwechslungsgefahr</div><div style="font-size:12.5px;line-height:1.6;color:#9B3333">Im deutschsprachigen Raum führen mehrere Bau- und Statikbüros denselben Namen. Die naheliegenden Domains sind durch diese Firmen belegt.</div></div>
+      </div>
+      <div style="display:flex;gap:14px;align-items:flex-start;padding:14px 16px;background:var(--tx-bg);border-left:3px solid var(--dx);border-radius:0 5px 5px 0">
+        <div style="font-family:'Playfair Display',serif;font-size:28px;font-weight:700;color:var(--tx);line-height:1;flex-shrink:0">3</div>
+        <div><div style="font-size:13px;font-weight:600;color:var(--tx);margin-bottom:4px">Keine Skalierbarkeit</div><div style="font-size:12.5px;line-height:1.6;color:#9B3333">Das Wachstumsziel — Produkte, Beteiligungen, Partnernetzwerk — erfordert einen Namen, der über »Beratung« und »Technik« hinaus trägt.</div></div>
+      </div>
+    </div>
+    <div style="display:flex;flex-direction:column;gap:0">
+      <h4 style="font-size:10px;font-weight:600;letter-spacing:.13em;text-transform:uppercase;color:var(--subtle);margin-bottom:10px">Vorgehen bis zu dieser Präsentation</h4>
+      <div style="display:flex;gap:14px;padding:11px 0;border-bottom:1px solid var(--line)"><div style="font-family:'Space Mono',monospace;font-size:11px;color:var(--subtle);flex-shrink:0;padding-top:2px">01</div><div style="font-size:13px;line-height:1.55;color:var(--secondary)"><strong style="color:var(--fg)">Auswertung und Analyse</strong> der bisherigen Gespräche und Meetings mit den Partnern</div></div>
+      <div style="display:flex;gap:14px;padding:11px 0;border-bottom:1px solid var(--line)"><div style="font-family:'Space Mono',monospace;font-size:11px;color:var(--subtle);flex-shrink:0;padding-top:2px">02</div><div style="font-size:13px;line-height:1.55;color:var(--secondary)"><strong style="color:var(--fg)">Zwei strukturierte Befragungsrunden</strong> mit allen drei Partnern — Anforderungsprofil für Tonalität, Zielgruppe und Skalierung erarbeitet</div></div>
+      <div style="display:flex;gap:14px;padding:11px 0;border-bottom:1px solid var(--line)"><div style="font-family:'Space Mono',monospace;font-size:11px;color:var(--subtle);flex-shrink:0;padding-top:2px">03</div><div style="font-size:13px;line-height:1.55;color:var(--secondary)"><strong style="color:var(--fg)">Naming-Briefing entwickelt</strong> — Namens-Territorien definiert, erste Kandidaten erarbeitet und bewertet</div></div>
+      <div style="display:flex;gap:14px;padding:11px 0;border-bottom:1px solid var(--line)"><div style="font-family:'Space Mono',monospace;font-size:11px;color:var(--subtle);flex-shrink:0;padding-top:2px">04</div><div style="font-size:13px;line-height:1.55;color:var(--secondary)"><strong style="color:var(--fg)">30 Kandidaten</strong> aus sechs Quellen systematisch entwickelt und auf strategische Passung geprüft — Claude, Gemini, ChatGPT, Grok, Namelix, Google-Suche</div></div>
+      <div style="display:flex;gap:14px;padding:11px 0;border-bottom:1px solid var(--line)"><div style="font-family:'Space Mono',monospace;font-size:11px;color:var(--subtle);flex-shrink:0;padding-top:2px">05</div><div style="font-size:13px;line-height:1.55;color:var(--secondary)"><strong style="color:var(--fg)">Vollständige Domain-Checks</strong> für alle relevanten Namen (.com, .at, .de, .io, .ch) — plus Web-Recherche auf Wettbewerbskollisionen</div></div>
+      <div style="display:flex;gap:14px;padding:11px 0"><div style="font-family:'Space Mono',monospace;font-size:11px;color:var(--subtle);flex-shrink:0;padding-top:2px">06</div><div style="font-size:13px;line-height:1.55;color:var(--secondary)"><strong style="color:var(--fg)">20 Kandidaten eliminiert</strong> — direkte Branchenkollisionen, blockierte Domains, Briefing-Verletzungen · 9 Namen verbleiben</div></div>
+      <div style="margin-top:14px;padding:13px 15px;background:var(--card);border-radius:5px;font-size:12.5px;line-height:1.6;color:var(--secondary)"><strong style="color:var(--fg)">Zentraler Befund:</strong> Der Namensraum im Tech-/KI-Beratungsfeld ist 2026 extrem gesättigt — nahezu jedes attraktive kurze Realwort ist durch einen direkten Wettbewerber belegt. 20 von 30 Kandidaten wurden deshalb eliminiert. Die verbleibenden 9 sind die nach aktuellem Stand saubersten verfügbaren Optionen.</div>
+    </div>
+  </div>
+</div>
+
+<!-- 03 KRITERIEN -->
+<div class="slide" style="justify-content:flex-start;padding-top:36px">
+  <div class="tier-row" style="margin-bottom:12px"><span class="badge badge-neu">Briefing</span></div>
+  <div class="name-big" style="font-size:clamp(44px,5.5vw,76px);margin-bottom:10px;line-height:.95">Vorgaben<br>der 3 Partner.</div>
+  <div style="font-family:'Playfair Display',serif;font-style:italic;font-size:16px;color:var(--secondary);margin-bottom:28px">Vereinbarte Kriterien für den neuen Unternehmensnamen — Grundlage dieser Bewertung.</div>
+  <div class="crit-grid">
+    <div class="crit-block">
+      <h4>✓ Muss-Kriterien</h4>
+      <div class="crit-item"><div class="crit-dot crit-dot-ok"></div><div><strong>Kurz & merkfähig</strong> — bleibt nach einmaligem Hören hängen, ohne Schreibhilfe merkbar</div></div>
+      <div class="crit-item"><div class="crit-dot crit-dot-ok"></div><div><strong>DE und EN tauglich</strong> — leicht auszusprechen und zu schreiben, keine Stolperfallen in beiden Sprachen</div></div>
+      <div class="crit-item"><div class="crit-dot crit-dot-ok"></div><div><strong>Echt & geerdet</strong> — kein beliebiges Fantasiewort; wenn erfunden, dann wie ein echtes Wort klingend mit erkennbarer Richtung</div></div>
+      <div class="crit-item"><div class="crit-dot crit-dot-ok"></div><div><strong>Skalierbar</strong> — passt zu Beratung, eigenem Produkt und Beteiligungen; kein zu enger Branchenanker</div></div>
+      <div class="crit-item"><div class="crit-dot crit-dot-ok"></div><div><strong>Möglichst frei</strong> — idealerweise freie .com, alternativ .at/.de; nicht von Tech-/KI-/Beratungsfirma belegt</div></div>
+    </div>
+    <div class="crit-block">
+      <h4>✗ Tabu-Kriterien</h4>
+      <div class="crit-item"><div class="crit-dot crit-dot-no"></div><div><strong>Keine KI-/AI-Begriffe</strong> — AI, GPT, Neuro, Smart, Brain, Bot → generisch und überlaufen</div></div>
+      <div class="crit-item"><div class="crit-dot crit-dot-no"></div><div><strong>Keine Bau-/Statik-Begriffe</strong> — Tragwerk, Beton, Statik, Brücke, Fundament, Gerüst → falscher Markt</div></div>
+      <div class="crit-item"><div class="crit-dot crit-dot-no"></div><div><strong>Kein Kanzlei-/Behörden-Look</strong> — keine »& Partner«-Konstruktionen, keine steifen Akronyme</div></div>
+      <div class="crit-item"><div class="crit-dot crit-dot-no"></div><div><strong>Keine Tech-Klischees</strong> — Forge, Nexus, Core, Hub, Labs, Logic, Mind, Sync → verbraucht</div></div>
+    </div>
+    <div class="crit-block">
+      <h4>Tonalität & Suchrichtungen</h4>
+      <div class="crit-item"><div class="crit-dot crit-dot-n"></div><div><strong>Ton:</strong> erfahren und strategisch — aber persönlich, nahbar, geerdet; nicht technisch-kühl, nicht KI-Hype</div></div>
+      <div class="crit-item"><div class="crit-dot crit-dot-n"></div><div><strong>Faustregel:</strong> ein Name, den ein Geschäftsführer UND ein erfahrener Techniker gleichermaßen respektieren</div></div>
+      <div class="crit-item"><div class="crit-dot crit-dot-n"></div><div><strong>A</strong> — Klangschöne Kurzwörter (wie Figma, Notion, Asana)</div></div>
+      <div class="crit-item"><div class="crit-dot crit-dot-n"></div><div><strong>B</strong> — Wissenschaft, Mathematik & Natur</div></div>
+      <div class="crit-item"><div class="crit-dot crit-dot-n"></div><div><strong>C</strong> — Handwerk & Meisterschaft: Navigation, Kartografie, Seefahrt</div></div>
+      <div class="crit-item"><div class="crit-dot crit-dot-n"></div><div><strong>D</strong> — Clevere Wortverschmelzungen (kein Akronym)</div></div>
+    </div>
+  </div>
+</div>
+
+<!-- 04 DIVIDER -->
+<div class="slide" style="justify-content:center;align-items:center;text-align:center">
+  <div class="name-big" style="font-size:clamp(56px,7.5vw,108px);color:var(--fg)">Die Ergebnisse&thinsp;…</div>
+</div>
+
+<!-- 05 SEQUITUM #1 -->
+<div class="slide ns">
+  <div class="tier-row"><span class="badge badge-t1">◆ Empfehlung #1</span><span class="tier-sub">Territorium B/D · Logik-Neologismus</span></div>
+  <div class="name-big">Sequitum</div>
+  <div class="name-origin">Von lat. sequitur — »es folgt.« Neologismus aus logischer Konsequenz.</div>
+  <div class="details">
+    <div class="dblock"><h4>Domains</h4><div class="domain-row"><span class="db db-f">.com frei ✓</span><span class="db db-f">.at frei</span><span class="db db-f">.de frei</span><span class="db db-f">.io frei</span><span class="db db-f">.ch frei</span><span class="db db-f">.eu frei</span></div><p class="note-small" style="color:var(--df);font-weight:500">Beste Domain-Lage im gesamten Pool — alle Kern-TLDs frei, Normalpreis.</p></div>
+    <div class="dblock"><h4>Kollisions-Check</h4><div class="coll coll-mid">Sequitur.com (The Sequitur Group, US) — ähnlich, aber <em>nicht identisch</em>. Sequitum selbst: kein bekannter Treffer. Risiko: Schreibvarianten (Sequitur, Seqitum).</div></div>
+    <div class="dblock"><h4>Bewertung</h4><div class="stars">★★★★½</div><p class="recc">Intellektuell stark, ruhig, mathematisch — und <strong>.com vollständig frei.</strong> Domaintechnisch unerreichter Spitzenwert im Pool.</p></div>
+  </div>
+</div>
+
+<!-- 06 ORIANT #2 -->
+<div class="slide ns">
+  <div class="tier-row"><span class="badge badge-t1">◆ Empfehlung #2</span><span class="tier-sub">Territorium D · Navigation & Orientierung</span></div>
+  <div class="name-big">Oriant</div>
+  <div class="name-origin">Von lat. orientare — »ausrichten, Richtung geben.« Der Name tut, was das Unternehmen tut.</div>
+  <div class="details">
+    <div class="dblock"><h4>Domains</h4><div class="domain-row"><span class="db db-x">.com CN-Domain (tot)</span><span class="db db-f">.at frei</span><span class="db db-f">.de frei</span><span class="db db-f">.io frei</span><span class="db db-f">.ch frei</span></div><p class="note-small">.com = chinesische Holding-Domain, 504-Fehler. Verhandlung möglich.</p></div>
+    <div class="dblock"><h4>Kollisions-Check</h4><div class="coll coll-ok">ORIANT Paris (Immobilien, 70 Follower auf LinkedIn) — branchenfern. An-Oriant-Firmen = Unternehmen aus der Stadt Lorient (FR). Kein Tech-/KI-Konkurrent.</div></div>
+    <div class="dblock"><h4>Bewertung</h4><div class="stars">★★★★</div><p class="recc">Sauberste DACH-Domain-Lage, navigationales Konzept passt ideal zur Lotsen-Positionierung. .com kann ignoriert oder später erworben werden.</p></div>
+  </div>
+</div>
+
+<!-- 07 VALEGRITY #3 -->
+<div class="slide ns">
+  <div class="tier-row"><span class="badge badge-t1">◆ Empfehlung #3</span><span class="tier-sub">Territorium D · Wortverschmelzung</span></div>
+  <div class="name-big">Valegrity</div>
+  <div class="name-origin">Value (Wert) + Integrity (Integrität) — Wertehaltung als Fundament jeder Partnerschaft.</div>
+  <div class="details">
+    <div class="dblock"><h4>Domains</h4><div class="domain-row"><span class="db db-f">.com frei ✓</span><span class="db db-f">.at frei</span><span class="db db-f">.de frei</span><span class="db db-f">.io frei</span><span class="db db-f">.ch frei</span><span class="db db-f">.eu frei</span></div><p class="note-small" style="color:var(--df);font-weight:500">Alle Kern-Domains vollständig frei inkl. .com.</p></div>
+    <div class="dblock"><h4>Kollisions-Check</h4><div class="coll coll-mid">Valerity.com (Cybersecurity, US) — ähnlicher Klang, aber <em>anderer Name und Branche</em>. Keine direkte Verwechslungsgefahr im DACH-KI-Raum.</div></div>
+    <div class="dblock"><h4>Bewertung</h4><div class="stars">★★★★</div><p class="recc">Domains vollständig frei. Inhaltlich passend: Vertrauen als Kern des Leistungsversprechens. <strong>Hinweis:</strong> der Name behauptet Werte — die Marke muss sie zeigen.</p></div>
+  </div>
+</div>
+
+<!-- 08 COROLLARY #4 -->
+<div class="slide ns">
+  <div class="tier-row"><span class="badge badge-t1">◆ Empfehlung #4</span><span class="tier-sub">Territorium B · Mathematik & Logik</span></div>
+  <div class="name-big">Corollary</div>
+  <div class="name-origin">Lat. corollarium — »Zugabe, die ohne weiteren Beweis zwingend aus dem Theorem folgt.«</div>
+  <div class="details">
+    <div class="dblock"><h4>Domains</h4><div class="domain-row"><span class="db db-s">.com (for sale)</span><span class="db db-f">.at frei</span><span class="db db-f">.de frei</span><span class="db db-f">.ch frei</span><span class="db db-f">.eu frei</span><span class="db db-x">.io geparkt (PPC)</span></div><p class="note-small">.com = GoDaddy Premium Parking — kein aktiver Nutzer, kaufbar. .io = PPC-Parkdomain (findonlineresults.com).</p></div>
+    <div class="dblock"><h4>Kollisions-Check</h4><div class="coll coll-ok">Kein aktiver Wettbewerber weltweit. .com ist reines Domain-Parking ohne Unternehmenshintergrund. Höchste Markenschutzfähigkeit im Gesamtvergleich.</div></div>
+    <div class="dblock"><h4>Bewertung</h4><div class="stars">★★★★★</div><p class="recc">Stärkste konzeptuelle Passung im Pool — passt direkt zur Mathematik-Affinität des Teams. Präsentationsposition #4 wegen <strong>phonetischer Hürde im Deutschen</strong> (»Ko-ro-la-ri«). Markenversprechen und Namensherleitung sind deckungsgleich.</p></div>
+  </div>
+</div>
+
+<!-- 09 SEMAVA (Reserve) -->
+<div class="slide ns">
+  <div class="tier-row"><span class="badge badge-t2">◇ Reserve</span><span class="tier-sub">Territorium A · Klangwort</span></div>
+  <div class="name-big">Semava</div>
+  <div class="name-origin">Kunstwort · warm, seriös, international, kein falscher Markt-Anker.</div>
+  <div class="details">
+    <div class="dblock"><h4>Domains</h4><div class="domain-row"><span class="db db-s">.com (for sale)</span><span class="db db-f">.at frei</span><span class="db db-f">.de frei</span><span class="db db-f">.io frei</span><span class="db db-f">.ch frei</span><span class="db db-f">.net frei</span></div></div>
+    <div class="dblock"><h4>Kollisions-Check</h4><div class="coll coll-mid">SEMAVA (Mexiko, Logistik) – branchenfern. <strong>SMAVA</strong> (DE Kreditportal): Ein-Buchstaben-Nähe, phonetisches Verwechslungsrisiko im DACH-Raum prüfen.</div></div>
+    <div class="dblock"><h4>Bewertung</h4><div class="stars">★★★</div><p class="recc">Warm, zugänglich, gute Domains. <strong>Schwäche:</strong> erfüllt das Kriterium »erkennbare Richtung« nicht — kein semantischer Anker, keine Herleitung. Steht hinter allen Kandidaten mit nachweisbarem Bedeutungsfeld zurück.</p></div>
+  </div>
+</div>
+
+<!-- 10 EXASTRUM (Reserve) -->
+<div class="slide ns">
+  <div class="tier-row"><span class="badge badge-t2">◇ Reserve</span><span class="tier-sub">Territorium B/C · Astronomie</span></div>
+  <div class="name-big">Ex<span style="font-style:normal">A</span>strum</div>
+  <div class="name-origin">Lat. ex astrum — »aus den Sternen.« Weitsicht, Seniorität, Navigation.</div>
+  <div class="details">
+    <div class="dblock"><h4>Domains</h4><div class="domain-row"><span class="db db-f">.com frei ✓</span><span class="db db-f">.at frei</span><span class="db db-f">.de frei</span><span class="db db-f">.io frei</span><span class="db db-f">.ch frei</span><span class="db db-f">.eu frei</span><span class="db db-x">.co n.v.</span></div><p class="note-small" style="color:var(--df);font-weight:500">Alle Kern-Domains frei inkl. .com.</p></div>
+    <div class="dblock"><h4>Kollisions-Check</h4><div class="coll coll-ok">Kein bekannter Treffer. Sehr spezifischer Neologismus — exklusiv verfügbar und hoch markenschutzfähig.</div></div>
+    <div class="dblock"><h4>Bewertung</h4><div class="stars">★★★★</div><p class="recc">Edel, tiefgründig, unverwechselbar. Vorbehalt: klingt etwas kosmisch-pathetisch für ein erdnahes Umsetzungsteam. Wenn die Gründer diese Energie lieben — stark.</p></div>
+  </div>
+</div>
+
+<!-- 11 APTELIO (Reserve) -->
+<div class="slide ns">
+  <div class="tier-row"><span class="badge badge-t2">◇ Reserve (mit Vorbehalt)</span><span class="tier-sub">Territorium B/D · Eignung & Ziel</span></div>
+  <div class="name-big">Aptelio</div>
+  <div class="name-origin">Lat. aptus (geeignet) + gr. telos (Ziel, Zweck) — zielgerichtete Präzision.</div>
+  <div class="details">
+    <div class="dblock"><h4>Domains</h4><div class="domain-row"><span class="db db-s">.com (for sale)</span><span class="db db-f">.at frei</span><span class="db db-f">.de frei</span><span class="db db-f">.io frei</span></div></div>
+    <div class="dblock"><h4>Kollisions-Check</h4><div class="coll coll-high">⚠ <strong>APTELIC.COM</strong> — »AI implementation partner. Strategy to execution.« Identische Positionierung. Direktes SEO- und Verwechslungsrisiko. Clearance obligatorisch.</div></div>
+    <div class="dblock"><h4>Bewertung</h4><div class="stars">★★★½</div><p class="recc">Konzeptuell einer der stärksten Namen. Aptelic-Befund ist kein automatisches K.O. — markenrechtliche Prüfung vor Weiterverfolgen zwingend.</p></div>
+  </div>
+</div>
+
+<!-- 12 APPTELIO (Variante) -->
+<div class="slide" style="justify-content:flex-start;padding-top:36px">
+  <div class="tier-row" style="margin-bottom:16px"><span class="badge badge-t2">◇ Variante zu Aptelio</span><span class="tier-sub">Alternativschreibweise · Domain-Check Juni 2026</span></div>
+  <div class="name-big" style="font-size:clamp(44px,6.5vw,92px);margin-bottom:14px">Apptelio</div>
+  <div style="font-family:'Playfair Display',serif;font-style:italic;font-size:16px;color:var(--secondary);margin-bottom:28px">Identisches Konzept wie Aptelio — Doppel-p als Schreibvariante mit stark verbesserter Domain-Lage.</div>
+  <div class="details" style="margin-top:0">
+    <div class="dblock"><h4>Domains</h4><div class="domain-row"><span class="db db-f">.com frei ✓</span><span class="db db-f">.at frei</span><span class="db db-f">.de frei</span><span class="db db-f">.io frei</span><span class="db db-f">.ch frei</span><span class="db db-f">.eu frei</span></div><p style="font-size:11.5px;color:var(--df);font-weight:500;margin-top:8px">Alle Kern-Domains vollständig frei — deutlich besser als Aptelio (.com dort for sale).</p></div>
+    <div class="dblock"><h4>Kollisions-Check</h4><div class="coll coll-high">⚠ Gleiche phonetische Kollision mit <strong>APTELIC.COM</strong> wie bei Aptelio — Doppel-p ändert die Aussprache nicht. Clearance-Prüfung bleibt obligatorisch.</div></div>
+    <div class="dblock"><h4>Bewertung</h4><div class="stars">★★★½</div><p class="recc">Einziger Vorteil gegenüber Aptelio: vollständig freie Domains inkl. .com. Das Aptelic-Kollisionsrisiko besteht identisch weiter — da Aussprache gleich ist.</p></div>
+  </div>
+</div>
+
+<!-- 13 IMMENOVO (Reserve) -->
+<div class="slide ns">
+  <div class="tier-row"><span class="badge badge-t2">◇ Reserve</span><span class="tier-sub">Territorium A · Klangwort</span></div>
+  <div class="name-big">Immenovo</div>
+  <div class="name-origin">Immanent (fest verankert) + novo (neu, lat.) — verankerte Erneuerung von innen.</div>
+  <div class="details">
+    <div class="dblock"><h4>Domains</h4><div class="domain-row"><span class="db db-f">.com frei ✓</span><span class="db db-f">.at frei</span><span class="db db-f">.de frei</span><span class="db db-f">.io frei</span><span class="db db-f">.ch frei</span><span class="db db-f">.eu frei</span></div><p class="note-small" style="color:var(--df);font-weight:500">Alle Kern-Domains vollständig frei.</p></div>
+    <div class="dblock"><h4>Kollisions-Check</h4><div class="coll coll-ok">Kein direkter Treffer. »Novo« als Fragment verbreitet (Novo Nordisk) — keine Kollision, da verschiedene Marke.</div></div>
+    <div class="dblock"><h4>Bewertung</h4><div class="stars">★★★</div><p class="recc">Organisch, warm, gut schützbar. <strong>Schwäche:</strong> »-novo«-Suffix ist ein Innovations-Klischee; weniger konzeptuelle Tiefe als Tier-1.</p></div>
+  </div>
+</div>
+
+<!-- 14 IMMENOVO VARIANTEN -->
+<div class="slide" style="justify-content:flex-start;padding-top:36px">
+  <div class="tier-row" style="margin-bottom:16px"><span class="badge badge-t2">◇ Varianten zu Immenovo</span><span class="tier-sub">Domain-Checks Juni 2026</span></div>
+  <div class="name-big" style="font-size:clamp(40px,5vw,66px);margin-bottom:8px">Drei Alternativen<br>im selben Territorium.</div>
+  <div style="font-family:'Playfair Display',serif;font-style:italic;font-size:15px;color:var(--secondary);margin-bottom:28px">Immanent + Nova/Novo — drei Schreibvarianten mit unterschiedlicher Klangrichtung und Domain-Lage.</div>
+  <div class="var-grid">
+    <div style="display:flex;flex-direction:column;gap:12px">
+      <div style="font-family:'Playfair Display',serif;font-size:42px;font-weight:700;line-height:1;letter-spacing:-.02em">Immenova</div>
+      <div style="font-size:12.5px;font-style:italic;font-family:'Playfair Display',serif;color:var(--secondary)">Immanent + nova (lat. neu, Supernova)</div>
+      <div><div style="font-size:10px;font-weight:600;letter-spacing:.12em;text-transform:uppercase;color:var(--subtle);margin-bottom:8px">Domains</div><div class="domain-row"><span class="db db-f">.com frei ✓</span><span class="db db-f">.at frei</span><span class="db db-f">.de frei</span><span class="db db-f">.io frei</span></div><div style="font-size:11.5px;color:var(--df);font-weight:500;margin-top:8px">Alle Kern-Domains vollständig frei.</div></div>
+      <div class="coll coll-ok" style="font-size:12px">Kein bekannter Treffer. Exzellente Ausgangslage.</div>
+      <div><div class="stars" style="font-size:15px">★★★½</div><p style="font-size:12.5px;color:var(--secondary);line-height:1.55">»Nova«-Endung evoziert Erneuerung und Supernova-Energie — stärker als »-novo«. Weicher, eleganter Gesamtklang.</p></div>
+    </div>
+    <div style="display:flex;flex-direction:column;gap:12px">
+      <div style="font-family:'Playfair Display',serif;font-size:42px;font-weight:700;line-height:1;letter-spacing:-.02em">Imminovo</div>
+      <div style="font-size:12.5px;font-style:italic;font-family:'Playfair Display',serif;color:var(--secondary)">Im- (hinein, in Bewegung) + minovo (Erneuerung)</div>
+      <div><div style="font-size:10px;font-weight:600;letter-spacing:.12em;text-transform:uppercase;color:var(--subtle);margin-bottom:8px">Domains</div><div class="domain-row"><span class="db db-f">.com frei ✓</span><span class="db db-f">.at frei</span><span class="db db-f">.de frei</span><span class="db db-f">.io frei</span></div><div style="font-size:11.5px;color:var(--df);font-weight:500;margin-top:8px">Alle Kern-Domains vollständig frei.</div></div>
+      <div class="coll coll-ok" style="font-size:12px">Kein bekannter Treffer. Exzellente Ausgangslage.</div>
+      <div><div class="stars" style="font-size:15px">★★★</div><p style="font-size:12.5px;color:var(--secondary);line-height:1.55">Doppel-»m« gibt mehr Gewicht und Bodenhaftung. »-novo« bleibt als Klischee-Risiko.</p></div>
+    </div>
+    <div style="display:flex;flex-direction:column;gap:12px">
+      <div style="font-family:'Playfair Display',serif;font-size:42px;font-weight:700;line-height:1;letter-spacing:-.02em">Imminova</div>
+      <div style="font-size:12.5px;font-style:italic;font-family:'Playfair Display',serif;color:var(--secondary)">Imminent (unmittelbar) + nova</div>
+      <div><div style="font-size:10px;font-weight:600;letter-spacing:.12em;text-transform:uppercase;color:var(--subtle);margin-bottom:8px">Domains</div><div class="domain-row"><span class="db db-x">.com vergeben</span><span class="db db-f">.at frei</span><span class="db db-f">.de frei</span><span class="db db-f">.io frei</span></div><div style="font-size:11.5px;color:var(--subtle);margin-top:8px">.com = aktives Unternehmen (Visa/Immigration-Plattform, UK).</div></div>
+      <div class="coll coll-high" style="font-size:12px">⚠ <strong>imminova.com</strong> = »Sponsor workers, hassle-free« — aktive Firma, branchenfern aber Namens-Kollision.</div>
+      <div><div class="stars" style="font-size:15px">★★</div><p style="font-size:12.5px;color:var(--secondary);line-height:1.55">Stärkster Klang der drei — aber aktive Namenskollision macht diesen Kandidaten zur Risikowahl.</p></div>
+    </div>
+  </div>
+</div>
+
+<!-- 15 VAUGMENT (Reserve) -->
+<div class="slide ns">
+  <div class="tier-row"><span class="badge badge-t2">◇ Reserve</span><span class="tier-sub">Territorium D · Wortverschmelzung</span></div>
+  <div class="name-big">Vaugment</div>
+  <div class="name-origin">Value (Wert) + Augment (Erweitern) — wertsteigernde Erweiterung bestehender Systeme.</div>
+  <div class="details">
+    <div class="dblock"><h4>Domains</h4><div class="domain-row"><span class="db db-f">.com frei ✓</span><span class="db db-f">.at frei</span><span class="db db-f">.de frei</span><span class="db db-f">.io frei</span><span class="db db-f">.ch frei</span><span class="db db-f">.eu frei</span></div><p class="note-small" style="color:var(--df);font-weight:500">Alle Kern-Domains vollständig frei.</p></div>
+    <div class="dblock"><h4>Kollisions-Check</h4><div class="coll coll-mid">Vaugment Private Limited (Indien, Tech.) — minor, branchenfern. Kein bekannter DACH-Wettbewerber.</div></div>
+    <div class="dblock"><h4>Bewertung</h4><div class="stars">★★★</div><p class="recc">Konzeptuell exakt richtig — beschreibt das Kernversprechen (KI-Schicht) präzise. <strong>Risiko:</strong> klingt eher nach Tool/SaaS-Produkt als nach Senior-Partner.</p></div>
+  </div>
+</div>
+
+<!-- 16 VAUGMENT VARIANTEN -->
+<div class="slide" style="justify-content:flex-start;padding-top:36px">
+  <div class="tier-row" style="margin-bottom:16px"><span class="badge badge-t2">◇ Varianten zu Vaugment</span><span class="tier-sub">Domain-Checks Juni 2026</span></div>
+  <div class="name-big" style="font-size:clamp(40px,5vw,66px);margin-bottom:8px">Drei Alternativen<br>im selben Territorium.</div>
+  <div style="font-family:'Playfair Display',serif;font-style:italic;font-size:15px;color:var(--secondary);margin-bottom:28px">Value + Augment — drei Schreibvarianten mit unterschiedlicher Klangrichtung und Domain-Lage.</div>
+  <div class="var-grid">
+    <div style="display:flex;flex-direction:column;gap:12px">
+      <div style="font-family:'Playfair Display',serif;font-size:42px;font-weight:700;line-height:1;letter-spacing:-.02em">Vaugmentum</div>
+      <div style="font-size:12.5px;font-style:italic;font-family:'Playfair Display',serif;color:var(--secondary)">Value + Augmentum (lat. Erweiterung)</div>
+      <div><div style="font-size:10px;font-weight:600;letter-spacing:.12em;text-transform:uppercase;color:var(--subtle);margin-bottom:8px">Domains</div><div class="domain-row"><span class="db db-f">.com frei ✓</span><span class="db db-f">.at frei</span><span class="db db-f">.de frei</span><span class="db db-f">.io frei</span></div><div style="font-size:11.5px;color:var(--df);font-weight:500;margin-top:8px">Alle Kern-Domains vollständig frei.</div></div>
+      <div class="coll coll-ok" style="font-size:12px">Kein bekannter Treffer. Ausgezeichnete Ausgangslage.</div>
+      <div><div class="stars" style="font-size:15px">★★★½</div><p style="font-size:12.5px;color:var(--secondary);line-height:1.55">Klangvoller als Vaugment, latinisierte Endung »-um« verleiht Seriosität.</p></div>
+    </div>
+    <div style="display:flex;flex-direction:column;gap:12px">
+      <div style="font-family:'Playfair Display',serif;font-size:42px;font-weight:700;line-height:1;letter-spacing:-.02em">Vaugmentis</div>
+      <div style="font-size:12.5px;font-style:italic;font-family:'Playfair Display',serif;color:var(--secondary)">Value + Augmentis (lat. Genitiv, »des Wachstums«)</div>
+      <div><div style="font-size:10px;font-weight:600;letter-spacing:.12em;text-transform:uppercase;color:var(--subtle);margin-bottom:8px">Domains</div><div class="domain-row"><span class="db db-f">.com frei ✓</span><span class="db db-f">.at frei</span><span class="db db-f">.de frei</span><span class="db db-f">.io frei</span></div><div style="font-size:11.5px;color:var(--df);font-weight:500;margin-top:8px">Alle Kern-Domains vollständig frei.</div></div>
+      <div class="coll coll-ok" style="font-size:12px">Kein bekannter Treffer. Ausgezeichnete Ausgangslage.</div>
+      <div><div class="stars" style="font-size:15px">★★★½</div><p style="font-size:12.5px;color:var(--secondary);line-height:1.55">Eleganter Klang, europäisch-lateinisch. Schreibung intuitiv für DACH-Zielgruppe.</p></div>
+    </div>
+    <div style="display:flex;flex-direction:column;gap:12px">
+      <div style="font-family:'Playfair Display',serif;font-size:42px;font-weight:700;line-height:1;letter-spacing:-.02em">Augmentis</div>
+      <div style="font-size:12.5px;font-style:italic;font-family:'Playfair Display',serif;color:var(--secondary)">Augmentis — ohne V-Präfix, puristisch</div>
+      <div><div style="font-size:10px;font-weight:600;letter-spacing:.12em;text-transform:uppercase;color:var(--subtle);margin-bottom:8px">Domains</div><div class="domain-row"><span class="db db-s">.com (squatter)</span><span class="db db-f">.at frei</span><span class="db db-x">.de vergeben</span><span class="db db-f">.io frei</span></div><div style="font-size:11.5px;color:var(--subtle);margin-top:8px">.com seit 2008 geparkt (eWebDevelopment, CA) — kaufbar. .de registriert aber inaktiv.</div></div>
+      <div class="coll coll-mid" style="font-size:12px">.com und .de belegt, aber keine aktive Firmennutzung. Akquisition beider Domains möglich aber aufwendig.</div>
+      <div><div class="stars" style="font-size:15px">★★★</div><p style="font-size:12.5px;color:var(--secondary);line-height:1.55">Stärkster Klang der drei — aber Domain-Situation erfordert Kaufverhandlungen für .com und .de.</p></div>
+    </div>
+  </div>
+</div>
+
+<!-- 17 ELIMINATED -->
+<div class="slide">
+  <div class="tier-row"><span class="badge badge-tx">✕ Ausschluss</span><span class="tier-sub">Direkte Kollision, blockierte Domains oder Briefing-Verletzung</span></div>
+  <div style="font-family:'Playfair Display',serif;font-size:clamp(48px,6vw,88px);font-weight:700;line-height:.95;letter-spacing:-.02em;margin-bottom:14px">Eliminiert.</div>
+  <div style="font-size:15px;font-style:italic;font-family:'Playfair Display',serif;color:var(--secondary);margin-bottom:28px">20 Kandidaten — keine Weiterempfehlung.</div>
+  <div class="elim-grid">
+    <div class="elim-card"><h5>Parallax</h5><p>Mehrere direkte AI Consulting Firmen; identisches Leistungsversprechen</p></div>
+    <div class="elim-card"><h5>Aleph</h5><p>Aleph Alpha — größtes deutschsprachiges KI-Unternehmen</p></div>
+    <div class="elim-card"><h5>Apogee</h5><p>Apogee Intelligence (AI Consulting) — direkte Branchenkollision</p></div>
+    <div class="elim-card"><h5>Sextant</h5><p>Sextant International: »KI-Strategie für Mittelstands-CEOs« — identisch</p></div>
+    <div class="elim-card"><h5>Tangent</h5><p>Tangent.co: »Turning AI hype into business reality« — identisch</p></div>
+    <div class="elim-card"><h5>Kairos</h5><p>KairosAI.eu, Kairos-tek.com — extrem saturiert im Zielmarkt</p></div>
+    <div class="elim-card"><h5>Arete</h5><p>AArete (Global Mgmt. Consulting), AreteAI — sehr saturiert</p></div>
+    <div class="elim-card"><h5>Mira</h5><p>Mira Murati's Startup ($12B), mehrere Mira AI Companies</p></div>
+    <div class="elim-card"><h5>Alidade</h5><p>Alidade AI (Competitive Intelligence) — direkte AI-Kollision</p></div>
+    <div class="elim-card"><h5>Affine</h5><p>Affine.ai: AI Consulting, 400+ MA, global aktiv</p></div>
+    <div class="elim-card"><h5>Aphelion</h5><p>Alle Kern-Domains belegt: .com .at .de .io .ch .eu</p></div>
+    <div class="elim-card"><h5>Verant</h5><p>Alle Kern-Domains belegt; Nähe zu Verint (US-Konzern)</p></div>
+    <div class="elim-card"><h5>Demetron</h5><p>Kerr-Demetron (Dental/Medizintechnik) — Markenkollision</p></div>
+    <div class="elim-card"><h5>Parhelio</h5><p>Parhelion Energy (KI/Digital Transf.), Parhelions.com — zu nah</p></div>
+    <div class="elim-card"><h5>Anivector</h5><p>Animation/Anime-Konnotation, GitHub-Projektkollision</p></div>
+    <div class="elim-card"><h5>Procyon</h5><p>.com/.de/.io/.eu/.net vergeben — zu viele Kern-Domains blockiert</p></div>
+    <div class="elim-card"><h5>Innorie</h5><p>Kein Bedeutungsfeld, keine Autorität für die Zielgruppe</p></div>
+    <div class="elim-card"><h5>Ideaserum</h5><p>Zaubertrank-Image — nicht seriös genug für B2B-Geschäftsführer</p></div>
+    <div class="elim-card"><h5>Ad-radium</h5><p>Bindestrich-Domain, Radium-Konnotation negativ besetzt</p></div>
+    <div class="elim-card"><h5>Byole</h5><p>Beliebiges Fantasiewort ohne erkennbare Bedeutungsrichtung</p></div>
+  </div>
+</div>
+
+<!-- 18 RANKING -->
+<div class="slide" style="justify-content:flex-start;padding-top:36px">
+  <div class="tier-row" style="margin-bottom:12px"><span class="badge badge-neu">Gesamtranking</span></div>
+  <div class="name-big" style="font-size:clamp(40px,5vw,68px);margin-bottom:28px">Empfehlung.</div>
+  <div class="rank-inner">
+    <table class="rtable">
+      <thead><tr><th>#</th><th>Name</th><th>Tier</th><th>Rating</th><th>.at/.de</th><th>.com</th><th>Kollision</th><th>Nächster Schritt</th></tr></thead>
+      <tbody>
+        <tr><td class="rnum">1</td><td><span class="rname">Sequitum</span></td><td><span class="badge badge-t1" style="font-size:9px">Finalist</span></td><td class="rstars">★★★★½</td><td style="color:var(--df);font-weight:600">✓ frei</td><td style="color:var(--df);font-weight:600">✓ frei</td><td style="color:var(--ds);font-size:12px">Sequitur-Nähe (minor)</td><td class="rtip">Aussprachetest DE/EN</td></tr>
+        <tr><td class="rnum">2</td><td><span class="rname">Oriant</span></td><td><span class="badge badge-t1" style="font-size:9px">Finalist</span></td><td class="rstars">★★★★</td><td style="color:var(--df);font-weight:600">✓ frei</td><td style="color:var(--dx)">✗ CN-Domain</td><td style="color:var(--df);font-size:12px">Nur branchenfern</td><td class="rtip">Markencheck · .at als Haupt-Domain</td></tr>
+        <tr><td class="rnum">3</td><td><span class="rname">Valegrity</span></td><td><span class="badge badge-t1" style="font-size:9px">Finalist</span></td><td class="rstars">★★★★</td><td style="color:var(--df);font-weight:600">✓ frei</td><td style="color:var(--df);font-weight:600">✓ frei</td><td style="color:var(--ds);font-size:12px">Valerity.com (minor)</td><td class="rtip">Markencheck</td></tr>
+        <tr><td class="rnum">4</td><td><span class="rname">Corollary</span></td><td><span class="badge badge-t1" style="font-size:9px">Finalist</span></td><td class="rstars">★★★★★</td><td style="color:var(--df);font-weight:600">✓ frei</td><td style="color:var(--ds)">⊙ for sale</td><td style="color:var(--df);font-size:12px">Keine</td><td class="rtip">DPMA/ÖPA Markencheck · .com-Kauf optional</td></tr>
+        <tr><td class="rnum">5</td><td><span class="rname">ExAstrum</span></td><td><span class="badge badge-t2" style="font-size:9px">Reserve</span></td><td class="rstars">★★★★</td><td style="color:var(--df);font-weight:600">✓ frei</td><td style="color:var(--df);font-weight:600">✓ frei</td><td style="color:var(--df);font-size:12px">Keine bekannten</td><td class="rtip">Tonalitäts-Abwägung mit Gründern</td></tr>
+        <tr><td class="rnum">6</td><td><span class="rname">Aptelio / Apptelio</span></td><td><span class="badge badge-t2" style="font-size:9px">Reserve ⚠</span></td><td class="rstars">★★★½</td><td style="color:var(--df);font-weight:600">✓ frei</td><td style="color:var(--ds)">⊙ / ✓</td><td style="color:var(--dx);font-size:12px">Aptelic.com (direkt!)</td><td class="rtip">Nur nach positivem Clearance</td></tr>
+        <tr><td class="rnum">7</td><td><span class="rname">Immenovo</span></td><td><span class="badge badge-t2" style="font-size:9px">Reserve</span></td><td class="rstars">★★★</td><td style="color:var(--df);font-weight:600">✓ frei</td><td style="color:var(--df);font-weight:600">✓ frei</td><td style="color:var(--df);font-size:12px">Keine bekannten</td><td class="rtip">Domains sofort sichern</td></tr>
+        <tr><td class="rnum">8</td><td><span class="rname">Vaugment</span></td><td><span class="badge badge-t2" style="font-size:9px">Reserve</span></td><td class="rstars">★★★</td><td style="color:var(--df);font-weight:600">✓ frei</td><td style="color:var(--df);font-weight:600">✓ frei</td><td style="color:var(--ds);font-size:12px">Indien-Firma (minor)</td><td class="rtip">Phonetik-Check DACH-Zielgruppe</td></tr>
+        <tr><td class="rnum">9</td><td><span class="rname">Semava</span></td><td><span class="badge badge-t2" style="font-size:9px">Reserve</span></td><td class="rstars">★★★</td><td style="color:var(--df);font-weight:600">✓ frei</td><td style="color:var(--ds)">⊙ for sale</td><td style="color:var(--ds);font-size:12px">SMAVA-Nähe (minor)</td><td class="rtip">Erfüllt »erkennbare Richtung« nicht</td></tr>
+      </tbody>
+    </table>
+    <div class="rank-note"><strong>Handlungsempfehlungen:</strong> Markenregistrierung Klassen 35/42 für die Top-3-Finalisten (DPMA, ÖPA, EUIPO). 10-Personen-Hörtest: Name einmal vorsprechen, aufschreiben lassen, Assoziationen abfragen. Domains nach Entscheidung sofort sichern. Anmerkung: Corollary weist die höchste konzeptuelle Bewertung (★★★★★) auf — Präsentationsposition #4 aufgrund phonetischer Hürde im Deutschen.</div>
+  </div>
+</div>
+
+<!-- 19 CREDENTIALS -->
+<div class="slide" style="justify-content:flex-start;padding-top:36px">
+  <div class="tier-row" style="margin-bottom:12px"><span class="badge badge-neu">Ersteller</span></div>
+  <div class="name-big" style="font-size:clamp(44px,6vw,84px);margin-bottom:6px;letter-spacing:-.03em">NFBrands.X</div>
+  <div style="font-family:'Playfair Display',serif;font-style:italic;font-size:16px;color:var(--secondary);margin-bottom:0">Creativity for #NonFungibleBrands</div>
+  <div class="cred-wrap">
+    <div class="cred-block">
+      <h4>Kontakt</h4>
+      <div class="cred-row">
+        <div class="cr"><strong>NFBrands.X GmbH</strong></div>
+        <div class="cr">Matthias Lechner · Gründer / Inhaber / GF</div>
+        <div class="cr" style="margin-top:8px">Lutterottistr. 7 / Top 1<br>6020 Innsbruck, Tirol · Austria</div>
+        <div class="cr" style="margin-top:8px"><a href="mailto:matthias.lechner@nfbrands.xyz">matthias.lechner@nfbrands.xyz</a></div>
+        <div class="cr">+43 699 17181969</div>
+        <div class="cr" style="margin-top:8px"><a href="https://www.NFBrands.xyz" target="_blank">www.NFBrands.xyz</a></div>
+      </div>
+    </div>
+    <div class="cred-block">
+      <h4>Firmendaten & Bankverbindung</h4>
+      <div class="cred-row">
+        <div class="cr"><strong>UID:</strong> ATU78436569</div>
+        <div class="cr"><strong>FN:</strong> 581872w</div>
+        <div class="cr" style="margin-top:10px"><strong>Bank:</strong> Sparkasse Kufstein</div>
+        <div class="cr"><strong>IBAN:</strong> AT68 2050 6077 0015 6016</div>
+        <div class="cr"><strong>BIC:</strong> SPKUAT22XXX</div>
+      </div>
+    </div>
+  </div>
+  <div class="legal-note">
+    <strong>Urheberrecht &amp; Nutzungsrechte.</strong> Diese Präsentation sowie alle darin enthaltenen Namenskonzepte, Analysen, Bewertungen und Empfehlungen sind urheberrechtlich geschützte Arbeit der NFBrands.X GmbH und verbleiben bis zur schriftlichen Vereinbarung einer anderslautenden Regelung in deren alleinigem Eigentum. Die Weitergabe an Dritte sowie die Nutzung einzelner Inhalte — ganz oder in Teilen — bedarf der ausdrücklichen schriftlichen Genehmigung der NFBrands.X GmbH. Die in dieser Präsentation vorgeschlagenen Namen begründen bis zum Abschluss einer gesonderten Nutzungsvereinbarung kein Nutzungs- oder Übertragungsrecht des Auftraggebers an diesen Vorschlägen. Eine kommerzielle Verwendung der präsentierten Namen ohne schriftliche Freigabe durch die NFBrands.X GmbH ist nicht gestattet.
+  </div>
+</div>
+
+</div>
+
+<footer class="ftr">
+  <button class="nav-btn" id="prevBtn" onclick="go(-1)" disabled>← Zurück</button>
+  <div class="dots-row" id="dots"></div>
+  <button class="nav-btn" id="nextBtn" onclick="go(1)">Weiter →</button>
+</footer>
+
+<script>
+(function(){
+  const slides=document.querySelectorAll('.slide');
+  const N=slides.length;
+  let cur=0;
+  const dotsEl=document.getElementById('dots');
+  slides.forEach((_,i)=>{
+    const d=document.createElement('div');
+    d.className='dot'+(i===0?' active':'');
+    d.addEventListener('click',()=>goTo(i));
+    dotsEl.appendChild(d);
+  });
+  function updateUI(){
+    document.getElementById('counter').textContent=String(cur+1).padStart(2,'0')+' / '+String(N).padStart(2,'0');
+    document.getElementById('pbar').style.width=((cur+1)/N*100)+'%';
+    document.getElementById('prevBtn').disabled=cur===0;
+    document.getElementById('nextBtn').disabled=false;
+    const nb=document.getElementById('nextBtn');
+    nb.textContent=cur===N-1?'↺ Von vorne →':'Weiter →';
+    document.querySelectorAll('.dot').forEach((d,i)=>d.classList.toggle('active',i===cur));
+  }
+  function goTo(idx){
+    if(idx===cur)return;
+    const prev=cur;cur=idx;
+    slides[prev].classList.remove('active');
+    slides[prev].classList.add('prev-out');
+    setTimeout(()=>slides[prev].classList.remove('prev-out'),480);
+    const dir=(idx===0&&prev===N-1)?1:(idx>prev?1:-1);
+    slides[cur].style.transform='translateX('+(dir*48)+'px)';
+    slides[cur].style.opacity='0';
+    slides[cur].classList.add('active');
+    requestAnimationFrame(()=>requestAnimationFrame(()=>{slides[cur].style.transform='';slides[cur].style.opacity='';}));
+    updateUI();
+  }
+  window.go=function(dir){if(dir===1&&cur===N-1)goTo(0);else goTo(cur+dir);};
+  document.addEventListener('keydown',e=>{
+    if(e.key==='ArrowRight'||e.key==='ArrowDown')go(1);
+    if(e.key==='ArrowLeft'||e.key==='ArrowUp')go(-1);
+  });
+  let tx0=0;
+  document.addEventListener('touchstart',e=>{tx0=e.touches[0].clientX;},{passive:true});
+  document.addEventListener('touchend',e=>{const dx=tx0-e.changedTouches[0].clientX;if(Math.abs(dx)>55)go(dx>0?1:-1);});
+  updateUI();
+})();
+</script>
+</body>
+</html>
