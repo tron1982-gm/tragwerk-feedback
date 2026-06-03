@@ -147,14 +147,15 @@ html,body{height:100%;width:100%;overflow:hidden;font-family:'Inter',sans-serif;
 .slide-dark .intro-card p{color:rgba(255,255,255,.55);}
 .slide-dark .badge-neu{background:rgba(255,255,255,.09);color:rgba(255,255,255,.42);}
 .slide-dark .cred-wrap{border-top-color:rgba(255,255,255,.10);}
-.slide-dark .cred-block h4{color:rgba(255,255,255,.32);}
-.slide-dark .cred-row .cr{color:rgba(255,255,255,.58);}
-.slide-dark .cred-row .cr strong{color:rgba(255,255,255,.92);}
-.slide-dark .cred-row .cr a{color:rgba(255,255,255,.7);border-bottom-color:rgba(255,255,255,.18);}
-.slide-dark .legal-note{background:rgba(255,255,255,.04);border-left-color:rgba(255,255,255,.12);color:rgba(255,255,255,.38);}
-.slide-dark .legal-note strong{color:rgba(255,255,255,.62);}
-.nfx-logo{width:100%;max-width:300px;height:auto;display:block;margin-bottom:20px;}
-.nfx-slogan{font-family:'Scandia','Inter',sans-serif;font-weight:400;font-size:16px;color:rgba(255,255,255,.5);margin-bottom:0;letter-spacing:.01em;}
+.slide-dark .cred-block h4{color:rgba(255,255,255,.38);}
+.slide-dark .cred-row .cr{color:#FFF;}
+.slide-dark .cred-row .cr strong{color:#FFF;}
+.slide-dark .cred-row .cr a{color:#FFF;border-bottom-color:rgba(255,255,255,.25);}
+.slide-dark .legal-note{background:rgba(255,255,255,.05);border-left-color:rgba(255,255,255,.15);color:rgba(255,255,255,.55);}
+.slide-dark .legal-note strong{color:#FFF;}
+.nfx-wrap{display:inline-flex;flex-direction:column;max-width:300px;width:100%;margin-bottom:0;}
+.nfx-logo{width:100%;height:auto;display:block;margin-bottom:14px;}
+.nfx-slogan{font-family:'Scandia','Inter',sans-serif;font-weight:400;font-size:16px;color:rgba(255,255,255,.5);margin-bottom:0;letter-spacing:.01em;width:100%;}
 
 /* special slides */
 .intro-kicker{font-size:11px;font-weight:600;letter-spacing:.14em;text-transform:uppercase;color:var(--subtle);margin-bottom:20px;}
@@ -209,7 +210,7 @@ html,body{height:100%;width:100%;overflow:hidden;font-family:'Inter',sans-serif;
 <body>
 
 <header class="hdr">
-  <span class="hdr-logo">Tragwerk · Naming 2026</span>
+  <span class="hdr-logo" id="hdr-logo-text">Tragwerk · Naming 2026</span>
   <span class="hdr-count" id="counter">01 / 19</span>
 </header>
 <div class="pbar" id="pbar"></div>
@@ -532,7 +533,7 @@ html,body{height:100%;width:100%;overflow:hidden;font-family:'Inter',sans-serif;
 
 <!-- 19 CREDENTIALS -->
 <div class="slide slide-dark" style="justify-content:flex-start;padding-top:36px">
-  <div class="tier-row" style="margin-bottom:20px"><span class="badge badge-neu">Ersteller</span></div>
+  <div class="nfx-wrap">
   <svg class="nfx-logo" viewBox="0 0 2800 354" xmlns="http://www.w3.org/2000/svg" aria-label="NFBrands.X">
     <g fill="#FFF" fill-rule="evenodd">
       <path d="M261.87,223.241L136.42,14.32L66.3,14.32L0,348.221L80.66,348.221L122.16,139.77L248.04,348.221L318.16,348.221L384.46,14.32L303.85,14.32L261.87,223.241Z"/>
@@ -548,6 +549,7 @@ html,body{height:100%;width:100%;overflow:hidden;font-family:'Inter',sans-serif;
     </g>
   </svg>
   <div class="nfx-slogan">Creativity for #NonFungibleBrands</div>
+  </div>
   <div class="cred-wrap">
     <div class="cred-block">
       <h4>Kontakt</h4>
@@ -601,6 +603,7 @@ html,body{height:100%;width:100%;overflow:hidden;font-family:'Inter',sans-serif;
     document.getElementById('pbar').style.width=((cur+1)/N*100)+'%';
     document.getElementById('prevBtn').disabled=cur===0;
     document.getElementById('nextBtn').disabled=false;
+    document.getElementById('hdr-logo-text').textContent=cur===N-1?'Tragwerk · Naming 2026 · Impressum':'Tragwerk · Naming 2026';
     const nb=document.getElementById('nextBtn');
     nb.textContent=cur===N-1?'↺ Von vorne →':'Weiter →';
     document.querySelectorAll('.dot').forEach((d,i)=>d.classList.toggle('active',i===cur));
