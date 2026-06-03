@@ -1,0 +1,1065 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Tragwerk · Naming-Feedback · Runde 3</title>
+<style>
+  :root {
+    --bg: #0f0f0f;
+    --surface: #1a1a1a;
+    --border: #2e2e2e;
+    --accent: #3db89a;
+    --text: #e8e8e8;
+    --muted: #888;
+    --focus: rgba(61,184,154,0.2);
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    font-family: 'Helvetica Neue', Arial, sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    line-height: 1.6;
+  }
+
+  /* HEADER */
+  header {
+    border-bottom: 1px solid var(--border);
+    padding: 48px 60px 36px;
+    max-width: 760px;
+    margin: 0 auto;
+  }
+  .eyebrow {
+    font-size: 13px;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    color: var(--muted);
+    margin-bottom: 12px;
+  }
+  header h1 {
+    font-size: 30px;
+    font-weight: 300;
+    letter-spacing: -0.5px;
+    color: var(--accent);
+    margin-bottom: 8px;
+  }
+  header p { color: var(--muted); font-size: 16px; }
+
+  /* INTRO */
+  .intro {
+    max-width: 760px;
+    margin: 0 auto;
+    padding: 36px 60px;
+    border-bottom: 1px solid var(--border);
+  }
+  .intro-label {
+    font-size: 12px;
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    color: var(--muted);
+    margin-bottom: 16px;
+  }
+  .intro p {
+    font-size: 16px;
+    color: #ccc;
+    line-height: 1.75;
+    margin-bottom: 12px;
+  }
+  .intro p:last-child { margin-bottom: 0; }
+
+  /* FORM */
+  form {
+    max-width: 760px;
+    margin: 0 auto;
+    padding: 0 60px 80px;
+  }
+
+  .section-block { margin-top: 52px; }
+  .section-label {
+    font-size: 12px;
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    color: #e8d5a3;
+    padding-bottom: 10px;
+    border-bottom: 1px solid var(--border);
+    margin-bottom: 32px;
+  }
+
+  .field { margin-bottom: 36px; }
+  label {
+    display: block;
+    font-size: 16px;
+    color: var(--text);
+    margin-bottom: 6px;
+    font-weight: 500;
+  }
+  .field-note {
+    font-size: 14px;
+    color: var(--muted);
+    margin-bottom: 12px;
+    line-height: 1.5;
+  }
+
+  /* INPUTS — etwas heller als surface (#1a + delta 11 = #25) */
+  input[type="text"],
+  textarea,
+  select {
+    width: 100%;
+    background: #252525;
+    border: 1px solid #333;
+    border-radius: 6px;
+    color: var(--text);
+    font-size: 16px;
+    font-family: inherit;
+    padding: 11px 15px;
+    outline: none;
+    transition: border-color 0.2s, box-shadow 0.2s;
+  }
+  input[type="text"]::placeholder,
+  textarea::placeholder { color: #666; }
+  input[type="text"]:focus,
+  textarea:focus,
+  select:focus {
+    border-color: var(--accent);
+    box-shadow: 0 0 0 3px rgba(61,184,154,0.18);
+    background: #2a2a2a;
+  }
+  textarea { resize: vertical; min-height: 78px; }
+  select { cursor: pointer; color: var(--text); }
+  select option { background: #252525; color: var(--text); }
+
+  /* RADIO GROUP */
+  .radio-group { display: flex; flex-direction: column; gap: 10px; margin-top: 8px; }
+  .radio-option {
+    display: flex;
+    align-items: flex-start;
+    gap: 12px;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    padding: 14px 16px;
+    cursor: pointer;
+    transition: border-color 0.2s;
+  }
+  .radio-option:hover { border-color: rgba(61,184,154,0.3); }
+  .radio-option input[type="radio"] { margin-top: 3px; accent-color: #3db89a; flex-shrink: 0; }
+  .radio-option.selected { border-color: rgba(61,184,154,0.5); background: rgba(61,184,154,0.07); }
+  .radio-label { font-size: 16px; color: var(--text); }
+
+  /* NAME CARD */
+  .name-card {
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    overflow: hidden;
+    margin-bottom: 28px;
+  }
+
+  /* TOP SECTION — Hintergrund = Seiten-Bg, Name = Accent, Herleitung = Muted */
+  .name-card-top {
+    background: #0f0f0f;
+    padding: 28px 28px 22px;
+  }
+  .name-card-title {
+    font-size: clamp(40px, 6vw, 58px);
+    font-weight: 300;
+    color: #3db89a;
+    letter-spacing: -1px;
+    line-height: 1.05;
+    margin-bottom: 10px;
+  }
+  .name-card-origin {
+    font-size: 14px;
+    color: #888;
+    line-height: 1.6;
+  }
+  .name-card-warning {
+    display: inline-block;
+    font-size: 12.5px;
+    color: #a05020;
+    background: #fff4ec;
+    border: 1px solid #e8c8a0;
+    border-radius: 4px;
+    padding: 4px 10px;
+    margin-top: 10px;
+    line-height: 1.4;
+  }
+
+  /* DARK BOTTOM SECTION */
+  .name-card-body {
+    background: var(--surface);
+    padding: 24px 28px;
+    display: flex;
+    flex-direction: column;
+    gap: 22px;
+  }
+  .name-card-body label {
+    font-size: 14px;
+    font-weight: 500;
+    color: #ccc;
+    margin-bottom: 5px;
+  }
+  /* Swap Fit-Bewertung (2nd) and Kommentar (3rd) */
+  .name-card-body > div:nth-child(2) { order: 3; }
+  .name-card-body > div:nth-child(3) { order: 2; }
+
+  /* SLIDER */
+  .slider-wrap { margin-top: 4px; position: relative; padding-bottom: 36px; }
+  input[type="range"] {
+    width: 100%;
+    -webkit-appearance: none;
+    appearance: none;
+    height: 6px;
+    border-radius: 3px;
+    outline: none;
+    cursor: pointer;
+    --thumb-color: #FBF4E5;
+    background: linear-gradient(to right,
+      #B14333 0%,
+      #C06656 10%,
+      #CF897A 20%,
+      #DEAC9D 30%,
+      #EDCFC1 40%,
+      #FBF4E5 50%,
+      #D5DBCB 60%,
+      #B0C2B2 70%,
+      #8AA998 80%,
+      #65907E 90%,
+      #41784E 100%
+    );
+  }
+  input[type="range"]::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    width: 22px;
+    height: 22px;
+    border-radius: 50%;
+    background: var(--thumb-color);
+    border: 2px solid var(--thumb-color);
+    cursor: pointer;
+    box-shadow: 0 1px 5px rgba(0,0,0,0.5);
+    transition: background 0.15s, border-color 0.15s, transform 0.1s;
+  }
+  input[type="range"]::-webkit-slider-thumb:hover {
+    transform: scale(1.12);
+  }
+  /* Floating bubble under thumb */
+  .slider-bubble {
+    position: absolute;
+    bottom: 0;
+    display: flex;
+    align-items: baseline;
+    gap: 6px;
+    white-space: nowrap;
+    pointer-events: none;
+  }
+  .slider-num {
+    font-size: 24px;
+    font-weight: 300;
+    transition: color 0.15s;
+  }
+  .slider-label-text {
+    font-size: 13px;
+    transition: color 0.15s;
+  }
+
+  /* TOP-3 RANKING */
+  .top3-grid {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    margin-top: 12px;
+  }
+  .top3-row {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    padding: 14px 18px;
+  }
+  .top3-rank {
+    font-size: 13px;
+    color: var(--muted);
+    min-width: 54px;
+    font-weight: 500;
+  }
+  .top3-row select {
+    flex: 1;
+    background: #252525;
+    border: 1px solid #333;
+    color: var(--text);
+    padding: 9px 12px;
+    font-size: 15px;
+    border-radius: 6px;
+    font-family: inherit;
+    cursor: pointer;
+    outline: none;
+  }
+  .top3-row select:focus { border-color: var(--accent); box-shadow: 0 0 0 3px rgba(61,184,154,0.18); }
+  .top3-row select option { background: #252525; color: var(--text); }
+
+  /* FAVORIT SELECT */
+  .favorit-select {
+    width: 100%;
+    background: #252525;
+    border: 1px solid #333;
+    border-radius: 6px;
+    color: var(--text);
+    font-size: 16px;
+    font-family: inherit;
+    padding: 12px 16px;
+    outline: none;
+    cursor: pointer;
+    transition: border-color 0.2s;
+    margin-top: 8px;
+  }
+  .favorit-select:focus { border-color: var(--accent); box-shadow: 0 0 0 3px rgba(61,184,154,0.18); }
+  .favorit-select option { background: #252525; color: var(--text); }
+
+  /* SUBMIT */
+  .submit-area {
+    margin-top: 48px;
+    padding-top: 32px;
+    border-top: 1px solid var(--border);
+  }
+  .submit-area p {
+    font-size: 15px;
+    color: var(--muted);
+    margin-bottom: 20px;
+  }
+  button[type="submit"] {
+    background: var(--accent);
+    color: #0f0f0f;
+    border: none;
+    border-radius: 6px;
+    padding: 14px 36px;
+    font-size: 16px;
+    font-weight: 600;
+    font-family: inherit;
+    cursor: pointer;
+    transition: opacity 0.2s;
+    letter-spacing: 0.3px;
+  }
+  button[type="submit"]:hover { opacity: 0.85; }
+  button[type="submit"]:disabled { opacity: 0.5; cursor: not-allowed; }
+
+  #success-msg {
+    display: none;
+    background: rgba(58,138,110,0.1);
+    border: 1px solid rgba(58,138,110,0.3);
+    border-radius: 8px;
+    padding: 24px 28px;
+    margin-top: 32px;
+    color: #6dc9a8;
+    font-size: 15px;
+    line-height: 1.65;
+  }
+
+  footer {
+    border-top: 1px solid var(--border);
+    padding: 20px 60px;
+    font-size: 14px;
+    color: var(--muted);
+    max-width: 760px;
+    margin: 0 auto;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+  .footer-brand {
+    font-size: 13px;
+    color: #555;
+    letter-spacing: 0.03em;
+  }
+
+  @media (max-width: 600px) {
+    header, .intro, form, footer { padding-left: 20px; padding-right: 20px; }
+    .name-card-top { padding: 20px 20px 18px; }
+    .name-card-body { padding: 20px 20px; }
+    .name-card-title { font-size: 36px; }
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="eyebrow">Tragwerk · Naming · Runde 3</div>
+  <h1>Namens-Feedback</h1>
+  <p>Juni 2026 · ca. 15 Minuten</p>
+</header>
+
+<div class="intro">
+  <div class="intro-label">Worum es geht</div>
+  <p>Ihr habt die Präsentation gesehen. Jetzt geht es um eure ehrliche Reaktion — es gibt keine richtigen oder falschen Antworten, und auch kein Konsens ist nötig.</p>
+  <p>Bewertet jeden Namen zunächst für sich. Am Ende wählt ihr eure Top 3 und benennt den klaren Favoriten.</p>
+</div>
+
+<form action="https://formspree.io/f/xjgdbley" method="POST" id="feedbackForm">
+  <input type="hidden" name="_subject" value="Tragwerk Naming-Feedback Runde 3">
+  <input type="hidden" name="formversion" value="naming-r3-2026-06">
+
+  <!-- ─── BLOCK 0: WER ANTWORTET ─── -->
+  <div class="section-block">
+    <div class="section-label">0 · Wer antwortet?</div>
+    <div class="field">
+      <div class="radio-group">
+        <label class="radio-option">
+          <input type="radio" name="respondent" value="Matthias Sammer" required>
+          <div><div class="radio-label">Matthias Sammer</div></div>
+        </label>
+        <label class="radio-option">
+          <input type="radio" name="respondent" value="Martin Wieser">
+          <div><div class="radio-label">Martin Wieser</div></div>
+        </label>
+        <label class="radio-option">
+          <input type="radio" name="respondent" value="Günther Niederhofer">
+          <div><div class="radio-label">Günther Niederhofer</div></div>
+        </label>
+      </div>
+    </div>
+  </div>
+
+  <!-- ─── BLOCK 1: NAMENSBEWERTUNG ─── -->
+  <div class="section-block">
+    <div class="section-label">1 · Jeder Name für sich</div>
+
+    <!-- SEQUITUM -->
+    <div class="name-card">
+      <div class="name-card-top">
+        <div class="name-card-title">Sequitum</div>
+        <div class="name-card-origin">Von lat. <em>sequitur</em> — »es folgt.« Neologismus aus logischer Konsequenz.</div>
+      </div>
+      <div class="name-card-body">
+        <div>
+          <label>Erste Reaktion — was geht dir durch den Kopf?</label>
+          <input type="text" name="sequitum_reaktion" placeholder="Erste Assoziation — ein Satz reicht">
+        </div>
+        <div>
+          <label>Fit-Bewertung — wie gut passt dieser Name zu euch?</label>
+          <div class="slider-wrap">
+            <input type="range" min="0" max="10" value="5" name="sequitum_fit" class="fit-slider" oninput="updateSlider(this)">
+            <div class="slider-bubble">
+              <span class="slider-num">5</span>
+              <span class="slider-label-text">annehmbar / solide</span>
+            </div>
+          </div>
+        </div>
+        <div>
+          <label>Kommentar <span style="color:var(--muted);font-weight:400">(optional)</span></label>
+          <textarea name="sequitum_kommentar" placeholder="Was gefällt, was stört, was fällt auf?"></textarea>
+        </div>
+      </div>
+    </div>
+
+    <!-- ORIANT -->
+    <div class="name-card">
+      <div class="name-card-top">
+        <div class="name-card-title">Oriant</div>
+        <div class="name-card-origin">Von lat. <em>orientare</em> — »ausrichten, Richtung geben.« Der Name tut, was das Unternehmen tut.</div>
+      </div>
+      <div class="name-card-body">
+        <div>
+          <label>Erste Reaktion — was geht dir durch den Kopf?</label>
+          <input type="text" name="oriant_reaktion" placeholder="Erste Assoziation — ein Satz reicht">
+        </div>
+        <div>
+          <label>Fit-Bewertung — wie gut passt dieser Name zu euch?</label>
+          <div class="slider-wrap">
+            <input type="range" min="0" max="10" value="5" name="oriant_fit" class="fit-slider" oninput="updateSlider(this)">
+            <div class="slider-bubble">
+              <span class="slider-num">5</span>
+              <span class="slider-label-text">annehmbar / solide</span>
+            </div>
+          </div>
+        </div>
+        <div>
+          <label>Kommentar <span style="color:var(--muted);font-weight:400">(optional)</span></label>
+          <textarea name="oriant_kommentar" placeholder="Was gefällt, was stört, was fällt auf?"></textarea>
+        </div>
+      </div>
+    </div>
+
+    <!-- VALEGRITY -->
+    <div class="name-card">
+      <div class="name-card-top">
+        <div class="name-card-title">Valegrity</div>
+        <div class="name-card-origin"><em>Value</em> (Wert) + <em>Integrity</em> (Integrität) — Wertehaltung als Fundament jeder Partnerschaft.</div>
+      </div>
+      <div class="name-card-body">
+        <div>
+          <label>Erste Reaktion — was geht dir durch den Kopf?</label>
+          <input type="text" name="valegrity_reaktion" placeholder="Erste Assoziation — ein Satz reicht">
+        </div>
+        <div>
+          <label>Fit-Bewertung — wie gut passt dieser Name zu euch?</label>
+          <div class="slider-wrap">
+            <input type="range" min="0" max="10" value="5" name="valegrity_fit" class="fit-slider" oninput="updateSlider(this)">
+            <div class="slider-bubble">
+              <span class="slider-num">5</span>
+              <span class="slider-label-text">annehmbar / solide</span>
+            </div>
+          </div>
+        </div>
+        <div>
+          <label>Kommentar <span style="color:var(--muted);font-weight:400">(optional)</span></label>
+          <textarea name="valegrity_kommentar" placeholder="Was gefällt, was stört, was fällt auf?"></textarea>
+        </div>
+      </div>
+    </div>
+
+    <!-- COROLLARY -->
+    <div class="name-card">
+      <div class="name-card-top">
+        <div class="name-card-title">Corollary</div>
+        <div class="name-card-origin">Lat. <em>corollarium</em> — »die Folgerung, die ohne weiteren Beweis aus dem Theorem folgt.«</div>
+      </div>
+      <div class="name-card-body">
+        <div>
+          <label>Erste Reaktion — was geht dir durch den Kopf?</label>
+          <input type="text" name="corollary_reaktion" placeholder="Erste Assoziation — ein Satz reicht">
+        </div>
+        <div>
+          <label>Fit-Bewertung — wie gut passt dieser Name zu euch?</label>
+          <div class="slider-wrap">
+            <input type="range" min="0" max="10" value="5" name="corollary_fit" class="fit-slider" oninput="updateSlider(this)">
+            <div class="slider-bubble">
+              <span class="slider-num">5</span>
+              <span class="slider-label-text">annehmbar / solide</span>
+            </div>
+          </div>
+        </div>
+        <div>
+          <label>Kommentar <span style="color:var(--muted);font-weight:400">(optional)</span></label>
+          <textarea name="corollary_kommentar" placeholder="Was gefällt, was stört, was fällt auf?"></textarea>
+        </div>
+      </div>
+    </div>
+
+    <!-- SEMAVA -->
+    <div class="name-card">
+      <div class="name-card-top">
+        <div class="name-card-title">Semava</div>
+        <div class="name-card-origin">Kunstwort — warm, seriös, international, kein falscher Markt-Anker.</div>
+      </div>
+      <div class="name-card-body">
+        <div>
+          <label>Erste Reaktion — was geht dir durch den Kopf?</label>
+          <input type="text" name="semava_reaktion" placeholder="Erste Assoziation — ein Satz reicht">
+        </div>
+        <div>
+          <label>Fit-Bewertung — wie gut passt dieser Name zu euch?</label>
+          <div class="slider-wrap">
+            <input type="range" min="0" max="10" value="5" name="semava_fit" class="fit-slider" oninput="updateSlider(this)">
+            <div class="slider-bubble">
+              <span class="slider-num">5</span>
+              <span class="slider-label-text">annehmbar / solide</span>
+            </div>
+          </div>
+        </div>
+        <div>
+          <label>Kommentar <span style="color:var(--muted);font-weight:400">(optional)</span></label>
+          <textarea name="semava_kommentar" placeholder="Was gefällt, was stört, was fällt auf?"></textarea>
+        </div>
+      </div>
+    </div>
+
+    <!-- EXASTRUM -->
+    <div class="name-card">
+      <div class="name-card-top">
+        <div class="name-card-title">ExAstrum</div>
+        <div class="name-card-origin">Lat. <em>ex astrum</em> — »aus den Sternen.« Weitsicht, Seniorität, Navigation.</div>
+      </div>
+      <div class="name-card-body">
+        <div>
+          <label>Erste Reaktion — was geht dir durch den Kopf?</label>
+          <input type="text" name="exastrum_reaktion" placeholder="Erste Assoziation — ein Satz reicht">
+        </div>
+        <div>
+          <label>Fit-Bewertung — wie gut passt dieser Name zu euch?</label>
+          <div class="slider-wrap">
+            <input type="range" min="0" max="10" value="5" name="exastrum_fit" class="fit-slider" oninput="updateSlider(this)">
+            <div class="slider-bubble">
+              <span class="slider-num">5</span>
+              <span class="slider-label-text">annehmbar / solide</span>
+            </div>
+          </div>
+        </div>
+        <div>
+          <label>Kommentar <span style="color:var(--muted);font-weight:400">(optional)</span></label>
+          <textarea name="exastrum_kommentar" placeholder="Was gefällt, was stört, was fällt auf?"></textarea>
+        </div>
+      </div>
+    </div>
+
+    <!-- APTELIO -->
+    <div class="name-card">
+      <div class="name-card-top">
+        <div class="name-card-title">Aptelio</div>
+        <div class="name-card-origin">Lat. <em>aptus</em> (geeignet) + gr. <em>telos</em> (Ziel, Zweck) — zielgerichtete Präzision.</div>
+        <div class="name-card-warning">⚠ Kollisionsrisiko: Aptelic.com (identische Positionierung) — markenrechtliche Prüfung erforderlich.</div>
+      </div>
+      <div class="name-card-body">
+        <div>
+          <label>Erste Reaktion — was geht dir durch den Kopf?</label>
+          <input type="text" name="aptelio_reaktion" placeholder="Erste Assoziation — ein Satz reicht">
+        </div>
+        <div>
+          <label>Fit-Bewertung — wie gut passt dieser Name zu euch?</label>
+          <div class="slider-wrap">
+            <input type="range" min="0" max="10" value="5" name="aptelio_fit" class="fit-slider" oninput="updateSlider(this)">
+            <div class="slider-bubble">
+              <span class="slider-num">5</span>
+              <span class="slider-label-text">annehmbar / solide</span>
+            </div>
+          </div>
+        </div>
+        <div>
+          <label>Kommentar <span style="color:var(--muted);font-weight:400">(optional)</span></label>
+          <textarea name="aptelio_kommentar" placeholder="Was gefällt, was stört, was fällt auf?"></textarea>
+        </div>
+      </div>
+    </div>
+
+    <!-- APPTELIO -->
+    <div class="name-card">
+      <div class="name-card-top">
+        <div class="name-card-title">Apptelio</div>
+        <div class="name-card-origin">Identisches Konzept wie Aptelio — Doppel-p als Schreibvariante mit verbesserter Domain-Lage (.com vollständig frei).</div>
+        <div class="name-card-warning">⚠ Gleiches Kollisionsrisiko mit Aptelic.com — Aussprache identisch mit Aptelio.</div>
+      </div>
+      <div class="name-card-body">
+        <div>
+          <label>Erste Reaktion — was geht dir durch den Kopf?</label>
+          <input type="text" name="apptelio_reaktion" placeholder="Erste Assoziation — ein Satz reicht">
+        </div>
+        <div>
+          <label>Fit-Bewertung — wie gut passt dieser Name zu euch?</label>
+          <div class="slider-wrap">
+            <input type="range" min="0" max="10" value="5" name="apptelio_fit" class="fit-slider" oninput="updateSlider(this)">
+            <div class="slider-bubble">
+              <span class="slider-num">5</span>
+              <span class="slider-label-text">annehmbar / solide</span>
+            </div>
+          </div>
+        </div>
+        <div>
+          <label>Kommentar <span style="color:var(--muted);font-weight:400">(optional)</span></label>
+          <textarea name="apptelio_kommentar" placeholder="Was gefällt, was stört, was fällt auf?"></textarea>
+        </div>
+      </div>
+    </div>
+
+    <!-- IMMENOVO -->
+    <div class="name-card">
+      <div class="name-card-top">
+        <div class="name-card-title">Immenovo</div>
+        <div class="name-card-origin"><em>Immanent</em> (fest verankert) + <em>novo</em> (neu, lat.) — verankerte Erneuerung von innen.</div>
+      </div>
+      <div class="name-card-body">
+        <div>
+          <label>Erste Reaktion — was geht dir durch den Kopf?</label>
+          <input type="text" name="immenovo_reaktion" placeholder="Erste Assoziation — ein Satz reicht">
+        </div>
+        <div>
+          <label>Fit-Bewertung — wie gut passt dieser Name zu euch?</label>
+          <div class="slider-wrap">
+            <input type="range" min="0" max="10" value="5" name="immenovo_fit" class="fit-slider" oninput="updateSlider(this)">
+            <div class="slider-bubble">
+              <span class="slider-num">5</span>
+              <span class="slider-label-text">annehmbar / solide</span>
+            </div>
+          </div>
+        </div>
+        <div>
+          <label>Kommentar <span style="color:var(--muted);font-weight:400">(optional)</span></label>
+          <textarea name="immenovo_kommentar" placeholder="Was gefällt, was stört, was fällt auf?"></textarea>
+        </div>
+      </div>
+    </div>
+
+    <!-- IMMENOVA -->
+    <div class="name-card">
+      <div class="name-card-top">
+        <div class="name-card-title">Immenova</div>
+        <div class="name-card-origin"><em>Immanent</em> + <em>nova</em> (lat. neu, Supernova) — Variante zu Immenovo mit stärkerem Erneuerungsklang.</div>
+      </div>
+      <div class="name-card-body">
+        <div>
+          <label>Erste Reaktion — was geht dir durch den Kopf?</label>
+          <input type="text" name="immenova_reaktion" placeholder="Erste Assoziation — ein Satz reicht">
+        </div>
+        <div>
+          <label>Fit-Bewertung — wie gut passt dieser Name zu euch?</label>
+          <div class="slider-wrap">
+            <input type="range" min="0" max="10" value="5" name="immenova_fit" class="fit-slider" oninput="updateSlider(this)">
+            <div class="slider-bubble">
+              <span class="slider-num">5</span>
+              <span class="slider-label-text">annehmbar / solide</span>
+            </div>
+          </div>
+        </div>
+        <div>
+          <label>Kommentar <span style="color:var(--muted);font-weight:400">(optional)</span></label>
+          <textarea name="immenova_kommentar" placeholder="Was gefällt, was stört, was fällt auf?"></textarea>
+        </div>
+      </div>
+    </div>
+
+    <!-- IMMINOVO -->
+    <div class="name-card">
+      <div class="name-card-top">
+        <div class="name-card-title">Imminovo</div>
+        <div class="name-card-origin"><em>Im-</em> (hinein, in Bewegung) + <em>minovo</em> (Erneuerung) — Variante mit mehr Gewicht durch Doppel-m.</div>
+      </div>
+      <div class="name-card-body">
+        <div>
+          <label>Erste Reaktion — was geht dir durch den Kopf?</label>
+          <input type="text" name="imminovo_reaktion" placeholder="Erste Assoziation — ein Satz reicht">
+        </div>
+        <div>
+          <label>Fit-Bewertung — wie gut passt dieser Name zu euch?</label>
+          <div class="slider-wrap">
+            <input type="range" min="0" max="10" value="5" name="imminovo_fit" class="fit-slider" oninput="updateSlider(this)">
+            <div class="slider-bubble">
+              <span class="slider-num">5</span>
+              <span class="slider-label-text">annehmbar / solide</span>
+            </div>
+          </div>
+        </div>
+        <div>
+          <label>Kommentar <span style="color:var(--muted);font-weight:400">(optional)</span></label>
+          <textarea name="imminovo_kommentar" placeholder="Was gefällt, was stört, was fällt auf?"></textarea>
+        </div>
+      </div>
+    </div>
+
+    <!-- IMMINOVA -->
+    <div class="name-card">
+      <div class="name-card-top">
+        <div class="name-card-title">Imminova</div>
+        <div class="name-card-origin"><em>Imminent</em> (unmittelbar bevorstehend) + <em>nova</em> — Variante mit stärkstem Klang der Gruppe.</div>
+        <div class="name-card-warning">⚠ Namenskollision: imminova.com ist aktives Unternehmen (UK) — Risiko vor Weiterverfolgen prüfen.</div>
+      </div>
+      <div class="name-card-body">
+        <div>
+          <label>Erste Reaktion — was geht dir durch den Kopf?</label>
+          <input type="text" name="imminova_reaktion" placeholder="Erste Assoziation — ein Satz reicht">
+        </div>
+        <div>
+          <label>Fit-Bewertung — wie gut passt dieser Name zu euch?</label>
+          <div class="slider-wrap">
+            <input type="range" min="0" max="10" value="5" name="imminova_fit" class="fit-slider" oninput="updateSlider(this)">
+            <div class="slider-bubble">
+              <span class="slider-num">5</span>
+              <span class="slider-label-text">annehmbar / solide</span>
+            </div>
+          </div>
+        </div>
+        <div>
+          <label>Kommentar <span style="color:var(--muted);font-weight:400">(optional)</span></label>
+          <textarea name="imminova_kommentar" placeholder="Was gefällt, was stört, was fällt auf?"></textarea>
+        </div>
+      </div>
+    </div>
+
+    <!-- VAUGMENT -->
+    <div class="name-card">
+      <div class="name-card-top">
+        <div class="name-card-title">Vaugment</div>
+        <div class="name-card-origin"><em>Value</em> (Wert) + <em>Augment</em> (Erweitern) — wertsteigernde Erweiterung bestehender Systeme.</div>
+      </div>
+      <div class="name-card-body">
+        <div>
+          <label>Erste Reaktion — was geht dir durch den Kopf?</label>
+          <input type="text" name="vaugment_reaktion" placeholder="Erste Assoziation — ein Satz reicht">
+        </div>
+        <div>
+          <label>Fit-Bewertung — wie gut passt dieser Name zu euch?</label>
+          <div class="slider-wrap">
+            <input type="range" min="0" max="10" value="5" name="vaugment_fit" class="fit-slider" oninput="updateSlider(this)">
+            <div class="slider-bubble">
+              <span class="slider-num">5</span>
+              <span class="slider-label-text">annehmbar / solide</span>
+            </div>
+          </div>
+        </div>
+        <div>
+          <label>Kommentar <span style="color:var(--muted);font-weight:400">(optional)</span></label>
+          <textarea name="vaugment_kommentar" placeholder="Was gefällt, was stört, was fällt auf?"></textarea>
+        </div>
+      </div>
+    </div>
+
+    <!-- VAUGMENTUM -->
+    <div class="name-card">
+      <div class="name-card-top">
+        <div class="name-card-title">Vaugmentum</div>
+        <div class="name-card-origin"><em>Value</em> + <em>Augmentum</em> (lat. Erweiterung, Zuwachs) — latinisierte Endung verleiht mehr Seriosität.</div>
+      </div>
+      <div class="name-card-body">
+        <div>
+          <label>Erste Reaktion — was geht dir durch den Kopf?</label>
+          <input type="text" name="vaugmentum_reaktion" placeholder="Erste Assoziation — ein Satz reicht">
+        </div>
+        <div>
+          <label>Fit-Bewertung — wie gut passt dieser Name zu euch?</label>
+          <div class="slider-wrap">
+            <input type="range" min="0" max="10" value="5" name="vaugmentum_fit" class="fit-slider" oninput="updateSlider(this)">
+            <div class="slider-bubble">
+              <span class="slider-num">5</span>
+              <span class="slider-label-text">annehmbar / solide</span>
+            </div>
+          </div>
+        </div>
+        <div>
+          <label>Kommentar <span style="color:var(--muted);font-weight:400">(optional)</span></label>
+          <textarea name="vaugmentum_kommentar" placeholder="Was gefällt, was stört, was fällt auf?"></textarea>
+        </div>
+      </div>
+    </div>
+
+    <!-- VAUGMENTIS -->
+    <div class="name-card">
+      <div class="name-card-top">
+        <div class="name-card-title">Vaugmentis</div>
+        <div class="name-card-origin"><em>Value</em> + <em>Augmentis</em> (lat. Genitiv, »des Wachstums«) — eleganter europäisch-lateinischer Klang.</div>
+      </div>
+      <div class="name-card-body">
+        <div>
+          <label>Erste Reaktion — was geht dir durch den Kopf?</label>
+          <input type="text" name="vaugmentis_reaktion" placeholder="Erste Assoziation — ein Satz reicht">
+        </div>
+        <div>
+          <label>Fit-Bewertung — wie gut passt dieser Name zu euch?</label>
+          <div class="slider-wrap">
+            <input type="range" min="0" max="10" value="5" name="vaugmentis_fit" class="fit-slider" oninput="updateSlider(this)">
+            <div class="slider-bubble">
+              <span class="slider-num">5</span>
+              <span class="slider-label-text">annehmbar / solide</span>
+            </div>
+          </div>
+        </div>
+        <div>
+          <label>Kommentar <span style="color:var(--muted);font-weight:400">(optional)</span></label>
+          <textarea name="vaugmentis_kommentar" placeholder="Was gefällt, was stört, was fällt auf?"></textarea>
+        </div>
+      </div>
+    </div>
+
+    <!-- AUGMENTIS -->
+    <div class="name-card">
+      <div class="name-card-top">
+        <div class="name-card-title">Augmentis</div>
+        <div class="name-card-origin"><em>Augmentis</em> — ohne V-Präfix, puristisch. Stärkster Klang der Vaugment-Gruppe.</div>
+      </div>
+      <div class="name-card-body">
+        <div>
+          <label>Erste Reaktion — was geht dir durch den Kopf?</label>
+          <input type="text" name="augmentis_reaktion" placeholder="Erste Assoziation — ein Satz reicht">
+        </div>
+        <div>
+          <label>Fit-Bewertung — wie gut passt dieser Name zu euch?</label>
+          <div class="slider-wrap">
+            <input type="range" min="0" max="10" value="5" name="augmentis_fit" class="fit-slider" oninput="updateSlider(this)">
+            <div class="slider-bubble">
+              <span class="slider-num">5</span>
+              <span class="slider-label-text">annehmbar / solide</span>
+            </div>
+          </div>
+        </div>
+        <div>
+          <label>Kommentar <span style="color:var(--muted);font-weight:400">(optional)</span></label>
+          <textarea name="augmentis_kommentar" placeholder="Was gefällt, was stört, was fällt auf?"></textarea>
+        </div>
+      </div>
+    </div>
+
+  </div><!-- end section-block -->
+
+  <!-- ─── BLOCK 2: GESAMTBEWERTUNG ─── -->
+  <div class="section-block">
+    <div class="section-label">2 · Gesamtbewertung</div>
+
+    <!-- TOP 3 -->
+    <div class="field">
+      <label>Deine Top 3 — welche Namen überzeugen dich am meisten?</label>
+      <div class="field-note">Wähle drei Favoriten in Reihenfolge. Jeder Name darf nur einmal vorkommen.</div>
+      <div class="top3-grid">
+        <div class="top3-row">
+          <span class="top3-rank">Platz 1</span>
+          <select name="top1" id="top1" onchange="validateTop3()">
+            <option value="">— Name wählen —</option>
+            <option>Sequitum</option><option>Oriant</option><option>Valegrity</option><option>Corollary</option>
+            <option>Semava</option><option>ExAstrum</option><option>Aptelio</option><option>Apptelio</option>
+            <option>Immenovo</option><option>Immenova</option><option>Imminovo</option><option>Imminova</option>
+            <option>Vaugment</option><option>Vaugmentum</option><option>Vaugmentis</option><option>Augmentis</option>
+          </select>
+        </div>
+        <div class="top3-row">
+          <span class="top3-rank">Platz 2</span>
+          <select name="top2" id="top2" onchange="validateTop3()">
+            <option value="">— Name wählen —</option>
+            <option>Sequitum</option><option>Oriant</option><option>Valegrity</option><option>Corollary</option>
+            <option>Semava</option><option>ExAstrum</option><option>Aptelio</option><option>Apptelio</option>
+            <option>Immenovo</option><option>Immenova</option><option>Imminovo</option><option>Imminova</option>
+            <option>Vaugment</option><option>Vaugmentum</option><option>Vaugmentis</option><option>Augmentis</option>
+          </select>
+        </div>
+        <div class="top3-row">
+          <span class="top3-rank">Platz 3</span>
+          <select name="top3" id="top3" onchange="validateTop3()">
+            <option value="">— Name wählen —</option>
+            <option>Sequitum</option><option>Oriant</option><option>Valegrity</option><option>Corollary</option>
+            <option>Semava</option><option>ExAstrum</option><option>Aptelio</option><option>Apptelio</option>
+            <option>Immenovo</option><option>Immenova</option><option>Imminovo</option><option>Imminova</option>
+            <option>Vaugment</option><option>Vaugmentum</option><option>Vaugmentis</option><option>Augmentis</option>
+          </select>
+        </div>
+      </div>
+      <div id="top3-error" style="display:none;color:#c06060;font-size:13px;margin-top:8px;">Jeder Name darf nur einmal ausgewählt werden.</div>
+    </div>
+
+    <!-- FAVORIT -->
+    <div class="field">
+      <label for="favorit">Wenn ihr heute entscheiden müsstet — welcher Name ist es?</label>
+      <div class="field-note">Kein Kompromiss. Bauchgefühl.</div>
+      <select name="favorit" id="favorit" class="favorit-select" required>
+        <option value="">— Name wählen —</option>
+        <option>Sequitum</option><option>Oriant</option><option>Valegrity</option><option>Corollary</option>
+        <option>Semava</option><option>ExAstrum</option><option>Aptelio</option><option>Apptelio</option>
+        <option>Immenovo</option><option>Immenova</option><option>Imminovo</option><option>Imminova</option>
+        <option>Vaugment</option><option>Vaugmentum</option><option>Vaugmentis</option><option>Augmentis</option>
+        <option value="Keiner überzeugt mich">Keiner überzeugt mich</option>
+      </select>
+    </div>
+
+    <!-- STÄRKE -->
+    <div class="field">
+      <label for="favorit_grund">Was überzeugt dich an deinem Favoriten?</label>
+      <div class="field-note">Ein Satz genügt. Was ist der entscheidende Grund?</div>
+      <textarea id="favorit_grund" name="favorit_grund" placeholder="z.B. »Der Name erklärt sich selbst und klingt auf Englisch seriös.«"></textarea>
+    </div>
+
+    <!-- KNOCK-OUT -->
+    <div class="field">
+      <label for="knockout">Gibt es einen Namen, den du definitiv ausschließt?</label>
+      <div class="field-note">Wenn ja: welcher, und warum? Wenn nein: Feld leer lassen.</div>
+      <textarea id="knockout" name="knockout" placeholder="z.B. »Corollary — zu schwer auszusprechen für Kunden.«" style="min-height:60px;"></textarea>
+    </div>
+
+  </div>
+
+  <!-- SUBMIT -->
+  <div class="submit-area">
+    <p>Danke für deine Zeit und Antworten, diese werden direkt an Matthias Lechner übermittelt.</p>
+    <button type="submit" id="submitBtn">Feedback absenden →</button>
+    <div id="success-msg">
+      <strong>Danke — Feedback erhalten.</strong><br>
+      Sobald alle drei geantwortet haben, folgt die Auswertung.
+    </div>
+  </div>
+
+</form>
+
+<footer>
+  <span>Tragwerk · Naming-Feedback Runde 3 · Juni 2026 · Vertraulich</span>
+  <span class="footer-brand">NFBrands.X GmbH</span>
+</footer>
+
+<script>
+// ── Gradient colors & labels ──
+const gradColors = ['#B14333','#C06656','#CF897A','#DEAC9D','#EDCFC1','#FBF4E5','#D5DBCB','#B0C2B2','#8AA998','#65907E','#41784E'];
+const gradLabels = ['passt gar nicht','ungenügend','mangelhaft','schwach','ausbaufähig','annehmbar / solide','gut','sehr gut','überzeugend','hervorragend','trifft es perfekt'];
+
+const THUMB = 22; // thumb width in px
+
+function updateSlider(slider) {
+  const v = parseInt(slider.value);
+  const max = parseInt(slider.max);
+  const color = gradColors[v];
+  const label = gradLabels[v];
+
+  // Update thumb color via CSS variable
+  slider.style.setProperty('--thumb-color', color);
+
+  // Update bubble text & color
+  const bubble = slider.parentElement.querySelector('.slider-bubble');
+  const numEl  = bubble.querySelector('.slider-num');
+  const lblEl  = bubble.querySelector('.slider-label-text');
+  numEl.textContent = v;
+  numEl.style.color = color;
+  lblEl.textContent = label;
+  lblEl.style.color = color;
+
+  // Position bubble centered under thumb
+  // thumb center = percent * (100% - THUMB) + THUMB/2
+  const pct = v / max;
+  bubble.style.left = `calc(${pct} * (100% - ${THUMB}px) + ${THUMB / 2}px)`;
+  if (v === 0)        { bubble.style.transform = 'translateX(0)'; }
+  else if (v === max) { bubble.style.transform = 'translateX(-100%)'; }
+  else                { bubble.style.transform = 'translateX(-50%)'; }
+}
+
+// Initialize all sliders on load
+document.querySelectorAll('.fit-slider').forEach(s => updateSlider(s));
+
+// ── Radio option highlight ──
+document.querySelectorAll('.radio-option input[type="radio"]').forEach(radio => {
+  radio.addEventListener('change', () => {
+    const group = radio.closest('.radio-group');
+    group.querySelectorAll('.radio-option').forEach(opt => opt.classList.remove('selected'));
+    radio.closest('.radio-option').classList.add('selected');
+  });
+});
+
+// ── Top 3 duplicate check ──
+function validateTop3() {
+  const v1 = document.getElementById('top1').value;
+  const v2 = document.getElementById('top2').value;
+  const v3 = document.getElementById('top3').value;
+  const vals = [v1, v2, v3].filter(v => v !== '');
+  const hasDup = vals.length !== new Set(vals).size;
+  document.getElementById('top3-error').style.display = hasDup ? 'block' : 'none';
+}
+
+// ── Form submission via fetch ──
+document.getElementById('feedbackForm').addEventListener('submit', async function(e) {
+  e.preventDefault();
+  const v1 = document.getElementById('top1').value;
+  const v2 = document.getElementById('top2').value;
+  const v3 = document.getElementById('top3').value;
+  const vals = [v1, v2, v3].filter(v => v !== '');
+  if (vals.length !== new Set(vals).size) {
+    document.getElementById('top3-error').style.display = 'block';
+    document.getElementById('top3-error').scrollIntoView({ behavior: 'smooth', block: 'center' });
+    return;
+  }
+  const btn = document.getElementById('submitBtn');
+  btn.disabled = true;
+  btn.textContent = 'Wird gesendet …';
+  const data = new FormData(this);
+  try {
+    const res = await fetch(this.action, {
+      method: 'POST',
+      body: data,
+      headers: { 'Accept': 'application/json' }
+    });
+    if (res.ok) {
+      btn.style.display = 'none';
+      document.getElementById('success-msg').style.display = 'block';
+      window.scrollTo({ top: document.body.scrollHeight, behavior: 'smooth' });
+    } else {
+      btn.disabled = false;
+      btn.textContent = 'Feedback absenden →';
+      alert('Fehler beim Senden. Bitte nochmals versuchen.');
+    }
+  } catch(err) {
+    btn.disabled = false;
+    btn.textContent = 'Feedback absenden →';
+    alert('Verbindungsfehler. Bitte prüfe deine Internetverbindung.');
+  }
+});
+</script>
+
+</body>
+</html>
